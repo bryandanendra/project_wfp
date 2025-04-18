@@ -1,0 +1,285 @@
+Web Framework Programming
+WEEK 06Informatics Engineering
+Universitas Surabaya
+Topic 6:
+Designing your Website using Template
+Informatics Engineering | Universitas Surabaya
+Cover Half
+
+Gambar vector bisa didownload di: https://scale.flexiple.com/illustrations/
+Jika ingin foto free royalty bisa download di: https://pixabay.com/photos/
+
+
+Outline
+Templating and Layout in Web Development
+Defining your Layout Template
+Defining your Child Template
+Implementation using Existing Case Study
+1
+2
+4
+3
+Informatics Engineering | Universitas Surabaya
+
+Templating
+3
+Informatics Engineering | Universitas Surabaya
+
+We will discuss how to use Custom HTML from a UI/UX designer into your Laravel Framework.
+We use Blade Template (https://laravel.com/docs/10.x/blade#introduction)
+Commonly used Template Syntax:
+@section @endsection
+@yield
+@extends
+{{ ….. }}  -> displaying Data
+{!! …….. !!}} -> Displaying Unescaped Data
+@json (json encode to render json data)
+Templating
+Informatics Engineering | Universitas Surabaya
+
+Templates, which embedded in the Laravel Framework, have various types according to their functions.
+There are 2 types of templates: Administrative Templates (backend) and Public Templates (front-end).
+The backend is part of the portal that is used for the administration of all data and is accessed by the company's internals. Usually has a simple UI/UX but displays complete and detailed data.
+The front end is the part of the portal that is used to publish information to public. The main challenge is how to manage interactions with general users. Public Side has an attractive UI/UX and accommodated various kinds of interactions
+The technique of installing templates both Front-end and Backend has the same method.
+Templating
+Informatics Engineering | Universitas Surabaya
+
+Practice #1: Installing Templates in Our Project
+6
+Informatics Engineering | Universitas Surabaya
+
+Search & download HTML templates
+Extract the HTML template source code
+Choose and Recognize Layouts that are used as the basic UI framework
+Slicing Layout to determine which is the parent (base layout) and child blade
+Apply Layouts and Child Templates in Laravel's Resources View
+Customize child templates with existing templates
+Integrate child templates with layout templates with @yield and @extends syntax
+Integrate template assets in Laravel project path with @asset . syntax
+Steps
+Informatics Engineering | Universitas Surabaya
+
+1. Find your Template
+Informatics Engineering | Universitas Surabaya
+You can get custom Template from any resources like: themeforest, templatemonster, and so on.
+For this lesson, we already provided 1 template for you.
+
+We use: AdminLTE
+
+
+Copy and extract this zip 
+In AdminLTE, our layout is located on dist/pages.
+Copy your element & assets template into directory public. In this case: assets, css and js inside dist directory
+2. Extract source HTML 
+Informatics Engineering | Universitas Surabaya
+
+
+Open your template and we analyze our `main` template. Open `index.html` in a web browser
+2. Extract source HTML (2)
+Informatics Engineering | Universitas Surabaya
+
+3. Identify your Layout
+Informatics Engineering | Universitas Surabaya
+
+Use the Inspect Element help tool in each browser.
+The header in AdminLTE is found as follows
+The syntax or class declaring header is
+	
+<nav class="app-header navbar navbar-expand bg-body">
+Layout Analysis: Headers
+Informatics Engineering | Universitas Surabaya
+Use [Pick inspector] (Ctrl+Shift+C) at Firefox
+
+Use the Inspect Element help tool in each browser.
+Sidebar on AdminLTE
+The syntax or class declaring it left-menu is a
+<aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+Layout Analysis: Sidebar
+Informatics Engineering | Universitas Surabaya
+
+Use the Inspect Element help tool in each browser.
+The Content on AdminLTE was found as follows
+The syntax or class that declares content is …
+ <main class="app-main">
+Layout Analysis: Content
+Informatics Engineering | Universitas Surabaya
+
+The AdminLTE Admin template has 3 parts, namely
+Header 
+Sidebar
+Content
+When choosing a different menu, only the content section always show different content based on the selected menu.
+When selecting a different menu, the 'sidebar' section has minor change in content. Only different CSS for the active menu
+When choosing a different menu, the 'header' section has minor change
+
+Hence, the ‘content' part must be sliced from the main layout
+3. Identify Layout (Summary)
+Informatics Engineering | Universitas Surabaya
+
+Based on the previous work steps, we can define:
+Child Layout is the program snippet from the inside ‘content’
+Base Layout is the entire HTML code of the 'index.html' file except ‘content’ section
+4. Define Base Layout and Child Layout
+Informatics Engineering | Universitas Surabaya
+Child Layout
+Base Layout
+
+Create a folder called 'layouts' in resources/views
+5. Apply Layouts and Child Templates on Laravel Resources View (1)
+Informatics Engineering | Universitas Surabaya
+
+Create a new blade file. (extension: *.blade.php)
+
+Filenames are basically free, but are recommended according to the `theme name`
+Informatics Engineering | Universitas Surabaya
+5. Apply Layouts and Child Templates on Laravel Resources View (2)
+
+Copy all the HTML scripts in index.html and paste them into layouts `adminlte4.blade.php`
+
+(see next slide) Move the `content` section and move script html into `child layout` (see next slide)
+Informatics Engineering | Universitas Surabaya
+5. Apply Layouts and Child Templates on Laravel Resources View (3)
+
+Informatics Engineering | Universitas Surabaya
+5. Apply Layouts and Child Templates on Laravel Resources View (4)
+Collapse <main class> ‘page-content’ and remove
+“….”. Because we substitute with @yield
+
+In the main-layout file, named `adminlte4.blade.php`, please add @yield('content’) near the red boxed (previous slide) to indicate that the section will be filled with a child. 
+
+In the beginning of child-layout file, programmer must create @section syntax to synchronize the child & main layout.
+
+Inside the section of `child-layout` please paste the script content inside the red-boxed (from the previous slide) and modify the page title to make it more appropriate
+6. Integrate child layout with our `main template` using @yield, @section and @extends syntax
+Informatics Engineering | Universitas Surabaya
+
+Cut (Ctrl+X)
+From your template, cut your content data
+Informatics Engineering | Universitas Surabaya
+New Child File 
+(ex: index2.blade.php)
+
+Informatics Engineering | Universitas Surabaya
+@extends('layouts.adminlte4’)
+
+@section('content')
+<!--begin::App Content Header-->
+        <div class="app-content-header">
+         …..
+       </div>
+@endsection
+In adminlte4.blade.php
+
+Practice #2: Implement the Template in Index of Food View
+25
+Informatics Engineering | Universitas Surabaya
+
+Add @extends and @section
+Also take the page-title and page-bar and modify it to fit the contents of the page
+
+Expected Results :
+Adapt your Food/index.blade.php into your Template
+Informatics Engineering | Universitas Surabaya
+
+Remove non-essential content
+Informatics Engineering | Universitas Surabaya
+
+Extend the parent/base layout and add a section for the content.
+
+Put your content script data inside the section(‘content’)
+
+Apply Layouts and Child Templates in Laravel's Resources View
+Informatics Engineering | Universitas Surabaya
+
+Don’t forget to check your `main-layout` and `child-layout` has similar name
+Integrate child templates with layout templates with @yield and @extends syntax
+Informatics Engineering | Universitas Surabaya
+
+In the child-layout file (eg: food/index.blade.php), it is written @extends and @section.
+ 
+@extends has a layout name parameter that is used as a benchmark.
+@extends is placed on top of the same as import in the controller file.
+
+@section has a yield name parameter to be entered.
+Informatics Engineering | Universitas Surabaya
+Integrate child templates with layout templates with @yield and @extends syntax (2)
+
+Add @section ('content') on the 3rd line (above the container-fluid class div because it indicates that from line 4 to @endsection will be pasted on @yield('content') in layouts.
+Informatics Engineering | Universitas Surabaya
+Integrate child templates with layout templates with @yield and @extends syntax (3)
+. . .
+
+Result
+Informatics Engineering | Universitas Surabaya
+
+Your template isn’t load correctly. Please check your “Inspect Element” and “Network tab”.
+
+This case caused by your asset template is missing.
+
+The components of template are
+Asset css
+Asset js
+Asset img
+
+
+
+What’s wrong?
+Informatics Engineering | Universitas Surabaya
+
+The solution is type “asset()” function before and after `all import js/css/image` scripts in layouts template.
+
+Usually import js/css scripts are located at the beginning (header) of html and footer of html
+SOLUTION: Install Asset JS/CSS template with @asset syntax
+Informatics Engineering | Universitas Surabaya
+
+The Result is
+Informatics Engineering | Universitas Surabaya
+
+Practice #3: Updating the menu for links to other tables
+36
+Informatics Engineering | Universitas Surabaya
+
+Go to the script file that implements left-menu
+Determine what links will appear in the menu
+Find the URI from the menu in web.php or use the artisan syntax “php artisan route:list”
+Use the syntax @route('route_name') or @url('path_url') where it goes
+Workflow Development
+Informatics Engineering | Universitas Surabaya
+
+In the above case we go to layouts/adminlte4.blade.php on the <div class="sidebar-wrapper">
+1. Go to the script file that implements left-menu
+Informatics Engineering | Universitas Surabaya
+
+Modify the coding in this case by providing 2 menus, namely: Food, Category menus
+In addition to the menu above, we will delete it.
+2. Determine what links will appear in the menu
+Informatics Engineering | Universitas Surabaya
+
+With php artisan route:list we are helped to find the link url or route name of the action to be displayed
+3. Find your URI from route:list
+Informatics Engineering | Universitas Surabaya
+
+Remember @route and
+@url is syntax
+blade then must
+given {{ … }}
+Add script -> route()
+Informatics Engineering | Universitas Surabaya
+
+Result
+Informatics Engineering | Universitas Surabaya
+
+
+#1. Modify all page of views and reports that you have created in previous tasks with new templates.  
+Food/Category/Customer/Order
+All your Report
+#2. Add menus in the sidebar to access those pages.
+#3. Change each of title homepage with your current page (clue: add @yield(‘title’) at your layouts)
+#4. Change active menu from your side-bar menu. (clue: add @yield(‘side-bar’) at your layouts and add “active” in side class)
+Your Task
+Informatics Engineering | Universitas Surabaya
+
+Thank You
+45
+Informatics Engineering | Universitas Surabaya

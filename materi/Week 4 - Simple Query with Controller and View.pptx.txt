@@ -1,0 +1,356 @@
+Web Programming Framework
+WEEK 04Informatics Engineering
+Universitas Surabaya
+Topic 4:
+Query in the
+Controller
+Informatics Engineering | Universitas Surabaya
+Cover Half
+
+Gambar vector bisa didownload di: https://scale.flexiple.com/illustrations/
+Jika ingin foto free royalty bisa download di: https://pixabay.com/photos/
+
+
+Outline
+Types of query methods in laravel
+Introduction to raw queries
+Introduction to query builder
+Introduction to Eloquent ORM
+Controller & View Concepts
+Using Route, Controller, and View in online reporting / food ordering system
+1
+4
+2
+5
+3
+6
+Informatics Engineering | Universitas Surabaya
+
+There are 3 variants of query syntax to manage data from the database, namely:
+Raw Queries
+Query Builder
+Eloquent ORM
+All techniques will generate queries based on DBMS language (as shown in the image)
+Query Communication
+Informatics Engineering | Universitas Surabaya
+
+Raw Query is a method that that EXPLICITLY uses "native” SQL to manage data from a DBMS.
+(Advantages) Raw Query is easier to use if we are already familiar with queries in the Native SQL.
+(Disadvantages for long-term development) If you need to migrate your schema into another DBMS (i.e : from MySQL to PostgreSQL), then you need to adjust each query so it can run in the new DBMS.
+Source : https://laravel.com/docs/10.x/queries#raw-expressions 
+
+Example : There are 2 tables: foods and categories. The query to display the all foods and its category is presented below:
+
+Raw Queries
+Informatics Engineering | Universitas Surabaya
+
+Query Builder is a query method provided by Laravel that uses PHP language to access the database.
+With this method, Laravel will automatically adjusts query into a raw format (native SQL form) that matches the target DBMS .
+The advantage is, if our project utilizes multiple DBMS, then we don’t need to re-adjust the query. Query Builder will automatically adjust it for us. 
+
+Example : There are 2 tables: foods and categories. The query to display the all foods and its category is presented below:
+Source : https://laravel.com/docs/10.x/queries 
+Query Builder
+Informatics Engineering | Universitas Surabaya
+
+Query Method that implements “Eloquent ORM” Model Laravel to manage Single table Query and Query on table relation.
+Source : https://laravel.com/docs/10.x/eloquent 
+Eloquent ORM
+Informatics Engineering | Universitas Surabaya
+
+Lots of Query Syntax can be found in the Controller file or Model file to manage data requested by User.
+
+User requests are processed by Laravel application in the Routing File and then directed to a specific Controller file.
+Where is Query syntax used?
+Informatics Engineering | Universitas Surabaya
+
+Controllers
+8
+Informatics Engineering | Universitas Surabaya
+
+Controllers in Laravel are PHP files located in the App/Http/Controllers directory.
+The controller contains PHP script with Object Oriented structure.
+The Controller class name will be the same as the File name of the controller. Please note that “all names are case sensitive”.
+Usually, controller receives requests from users and then handle it by performing some logic statements. The output will be returned as responses for a specific view.
+We can access database from a Controller by using either Query Builder or Eloquent ORM.
+Controllers
+Informatics Engineering | Universitas Surabaya
+
+Controllers and Routing work together to handle requests.
+Routing manages HTTP commands, URLs and map in the Routing table to direct data handling.
+The results of the instructions from Routing will be the initial data for a function on a particular controller. In general, the initial data is a parameter.
+Controller Relationship with Routing
+Informatics Engineering | Universitas Surabaya
+Instruction from Routing
+
+Generally, the controller handles data display and data manipulation.
+Data display: displaying all the data in the database, displaying certain data in accordance with criteria
+Data manipulation: adding, editing and deleting data.
+The above functions are usually called CRUD functions (Create, Retrieve, Update and Delete)
+Contents of The Controller
+Informatics Engineering | Universitas Surabaya
+
+Laravel gives convenient syntaxes to help developers create "CRUD" on the controller with one single line of code.
+To use it, we can use the following Artisan command:
+
+
+
+
+When using resources, you only need to create one method in routing files (web.php)
+
+
+
+
+
+That single method will manage CRUD in the Photo table (on case above) .
+
+Source : https://laravel.com/docs/10.x/controllers#resource-controllers 
+Resource Controller 
+Informatics Engineering | Universitas Surabaya
+
+To manage CRUD, we must follow the existing Action Handler rules determined by Laravel Resource Controller.
+Resource Controller
+Informatics Engineering | Universitas Surabaya
+
+If your routing file contains
+
+
+
+
+Then your website will get the following routes : 
+GET method with url BASE_URL/photos redirects to PhotoController index() function and named as ' photos.index '
+GET method with url BASE_URL/photos/create redirected to PhotoController create() function and named as ' photos.create '
+POST method with url BASE_URL/photos redirects to PhotoController store() function and named as ' photos.store '
+……. ( etc until )
+DELETE method with url BASE_URL/photos/{photo} redirected to PhotoController destroy() function and named as ' photos.destroy '
+
+NB: /photos/{photo} will contain the ID of {photo} photo to be deleted
+Example : if we want to delete photo id=1, then url must be BASE_URL/photos/1 with the HTTP DELETE method
+Resource Controller Explanation
+Informatics Engineering | Universitas Surabaya
+
+(20 minutes)
+
+Create 2 controllers in your 2 tables, namely: `FoodController` and `CategoryController`
+Name those controllers with a singular name
+Use additional parameter “--resource”
+
+Try: if you create a controller without --resources, 
+what happens to the contents of the  controller file? Discuss in class !
+
+PRACTICE #1
+Informatics Engineering | Universitas Surabaya
+
+The implementation of HTTP methods usually done in a View (basically is a HTML form)
+The GET method is the default HTTP method used when we access the browser. GET Method transferred data parameters between open URLs, those parameters could be seen on the URL.
+The POST method is the HTTP method used to secure the transferred data from seen on the URL. To change the method, just like on Web Programming course, we need to change the method on the form element into “POST”.
+Changing the HTTP Method
+Informatics Engineering | Universitas Surabaya
+……….
+
+For methods other than GET and POST, you have to do "HTTP method spoofing" based on https://laravel.com/docs/10.x/controllers#resource-controllers in Spoofing Form Methods subchapter ( https://laravel.com/docs/10.x/routing#form-method-spoofing )
+The following example shows a Form Method Spoofing for the PUT method. Fill the form method with “POST” and include “@method('PUT’)” blade syntax
+Changing the HTTP Method
+Informatics Engineering | Universitas Surabaya
+
+Informatics Engineering | Universitas Surabaya
+
+Eloquent ORM is model class in the Laravel Framework. To make it easier, next we will use "model" terminology for this.
+
+The Laravel model is in the app folder
+There are 2 ways to make a Laravel model:
+Make the model directly.
+Artisan Syntax:
+php artisan make:model ModelName
+
+Because the models are related tightly with the controller, we can create model and controller simultaneously in a single syntax:
+Artisan Syntax:
+php artisan make:controller ControllerName --resource -model= ModelName
+
+Getting to know Eloquent ORM
+Informatics Engineering | Universitas Surabaya
+
+Model Class Structure consists of:
+Table Name
+Timestamps for created_at and updated_at status
+Primary Key column name
+Primary Key Column Type
+(source : https://laravel.com/docs/10.x/eloquent#eloquent-model-conventions)
+
+Eloquent Function that define relation with other tables (either one-to-one, one-to-many, many-to-many)
+(source : https://laravel.com/docs/10.x/eloquent-relationships#introduction)
+Filling in the Model 
+Informatics Engineering | Universitas Surabaya
+
+Table Name
+Model name is singular, but database name is plural. Example: if the model is named Product, then the table name in the database is products. If the database name is not following the Laravel's naming convention, then we can override the configuration later.
+
+Primary Key
+The primary key column default name is 'id'. Primary Key default type is Unsigned Big Integer and has AUTO_INCREMENT element. If we use different name and type for the primary key, we can also override it in the Model class.
+
+Timestamps
+By default all tables in the Laravel framework have created_at and updated_at columns. We can implement it in migrations by using timestamps(). If we used pre-designed schema (i.e : ERD from MySQL Workbench), then we need to re-adjust it later by overriding the configuration..
+
+
+More in about Models
+Informatics Engineering | Universitas Surabaya
+
+From the example image, we can identify that the database structures of “Soal” model is :
+Table name: ’soal’
+Primary Key(PK) column: ’soal_id '
+Primary Key(PK) not using auto_increment 
+Primary Key(PK) type is varchar/string
+“Soal” table has timestamps, timestamps column’s name is not ‘created_at’ & ‘updated_at’ but rather ‘creation_date’ and ‘last_update’
+Overriding Model Defaults
+Informatics Engineering | Universitas Surabaya
+
+(10 minutes)
+
+Create 2 model classes for `Food` and `Category` in your database
+Use singular names according to the name conventions
+Practice #2
+Informatics Engineering | Universitas Surabaya
+
+More about Eloquent ORM (Relation)
+24
+Informatics Engineering | Universitas Surabaya
+https://laravel.com/docs/10.x/eloquent-relationships#main-content 
+
+Implementing RELATION on Eloquent.
+
+Relation isn’t automatically creating by system. Programmer have to define inside Model Eloquent so we can perform queries with ORM
+The definition is only necessary once at the beginning when a new FK is installed
+Relationships in ORM
+Informatics Engineering | Universitas Surabaya
+
+Students are related (only) to 1 Unit
+
+Relationships in ORM (Example)
+Informatics Engineering | Universitas Surabaya
+The unit has many MKs taught
+
+
+
+You can integrate the Controller with a specific Model by using parameter --model= ModelName when creating the controller.
+Controller with Models
+Informatics Engineering | Universitas Surabaya
+
+When performing a query with the DB class (namely: RAW and Query Builder), use import DB with the image syntax below.
+     (same as OOP concept ) Place it above the class definition
+Notes 
+Informatics Engineering | Universitas Surabaya
+
+2. When performing a query with ELOQUENT QUERY, don't forget to use Import on each Class Models.
+(same as OOP concept ) Place it above the class definition
+
+Notes
+Informatics Engineering | Universitas Surabaya
+
+You can see the installed routing (either manually or with the route list)
+
+
+
+
+Viewing Route List Syntax
+php artisan route:list
+Route List Additional Notes
+Informatics Engineering | Universitas Surabaya
+
+If you encounter this of error, then check the file and the error line of codes. There is a chance that you haven’t implement "use" or not importing the controller correctly.
+Informatics Engineering | Universitas Surabaya
+
+View
+32
+Informatics Engineering | Universitas Surabaya
+
+View is a file with extension “.php” and containing html script, css, jquery, and php. In Laravel, it is known as blade template file.
+Location of View: resources/views folder
+View File Extension:
+When we want to use blade syntax then name it “<file_name>.blade.php ”
+When we don’t use blade syntax then name it “<filename>.php”
+View
+Informatics Engineering | Universitas Surabaya
+
+Practice #3: Create a Controller to display all your Product Food data
+34
+Informatics Engineering | Universitas Surabaya
+
+Use Artisan Command to create a Controller and its model. Model name is singular of table name in the database.
+
+php artisan make:controller FoodController --resource --model=Food
+
+
+Fill the index() in the Controller file with a command to retrieve all data in the ticket table. The index() function is selected because index is usually used to display list of data.
+Steps
+Informatics Engineering | Universitas Surabaya
+
+
+
+Add additional configuration of Food Model
+
+Informatics Engineering | Universitas Surabaya
+
+Kelebihan collection Laravel: Collections - Laravel 10.x - The PHP Framework For Web Artisans 
+
+Kelebihan menggunakan Collections laravel adalah kita bisa memanipulasi data (order, sorting, filter) secara PHP dengan sintaksis lebih simple.
+
+Sebagai contoh: terdapat data makanan dan mau diurutkan dari harga (“price”), maka di Query tidak perlu order, tetapi di PHP Collections kita order 
+
+When an error appears like image below
+
+
+
+
+
+So, you need to import the DB in that class (see Notes)
+Remember, all static classes that are called must be imported before being executed.
+
+Its characteristic is classname :: function (); 
+This means that in the import there must be “use package\classname”
+Warning
+Informatics Engineering | Universitas Surabaya
+
+3. Passing the data to a specific view. 
+Naming pattern is ‘foldername.viewfilename ‘. (i.e : ‘foods.index’ means that we are passing the data into ‘index.blade.php’ that is located in folder ‘resource/view/foods’)
+Informatics Engineering | Universitas Surabaya
+
+In the example above, we should create the view in:
+/resources/views/foods/index.blade.php
+Create call View and create a View
+Informatics Engineering | Universitas Surabaya
+
+Using Bootstrap to Make Pretty Tables
+Informatics Engineering | Universitas Surabaya
+https://www.w3schools.com/bootstrap/bootstrap_tables.asp
+
+Copy and paste the example boostrap table codes then paste it into your view(blade) file.
+Using Bootstrap to Make Pretty Tables
+Informatics Engineering | Universitas Surabaya
+
+
+Modifying the Table
+Informatics Engineering | Universitas Surabaya
+
+Method #1
+Method #2
+Generating Table Body
+Informatics Engineering | Universitas Surabaya
+
+Open the Browser to Test the Result
+Informatics Engineering | Universitas Surabaya
+
+Practice #4: Add List View of “Category”, “Customer”, “Transaction”
+51
+Informatics Engineering | Universitas Surabaya
+
+Use Controller Resource with Model
+Write Route with Route::Resource to simplify your process
+Write View with Boostraps Table
+Write View inside Resources/Views/ and make a directory first with the Entities Name from Database.
+
+Working steps
+Informatics Engineering | Universitas Surabaya
+
+Thank You!
+53
+Informatics Engineering | Universitas Surabaya

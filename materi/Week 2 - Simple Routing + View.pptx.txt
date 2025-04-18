@@ -1,0 +1,321 @@
+Web Framework Programming
+WEEK 02Informatics Engineering
+Universitas Surabaya
+Topik 2: 
+Simple Routing & View
+Informatics Engineering | Universitas Surabaya
+Cover Half
+
+Gambar vector bisa didownload di: https://scale.flexiple.com/illustrations/
+Jika ingin foto free royalty bisa download di: https://pixabay.com/photos/
+
+
+OUTLINE(5W + 1H)
+What is Routing ?
+Where is the location of Routing Files?
+Why is Router important?
+How many various of Routing in Laravel?
+How can we define routing in our Apps?
+What is View?
+Where is the location of View Files?
+Practice with Case Study
+
+Mari kita cek kondisi awal anda
+3
+Informatics Engineering | Universitas Surabaya
+
+Cek Dulu yuk…
+Pastikan sudah memilih IDE yang sesuai dengan kebutuhan Anda. Pada kasus di slide ini IDE yang digunakan penulis adalah Visual Studio Code.
+
+Pastikan anda sudah installasi Laravel 10 pada directory htdocs XAMPP anda
+
+Nama folder dari project bebas, tidak harus sesuai screenshot di samping.
+
+Routing
+
+Router
+In a general, a router is a path. In the web development, the route is some controller or handler that catch URL from HTTP Request can be delivered into File Controller.
+Routing is a process in an application that functions to set roads/routes in web-based applications.
+Router implement  REQUEST & RESPOND Header of HTTP Protocol.
+
+REQUEST Command HTTP 🡪 GET, POST, DELETE, PUT, PATCH
+URL 🡪 Uniform Resource Locator. A URL is nothing more than the address of a given unique resource on the Web. 
+
+Official Documentation: https://laravel.com/docs/10.x/routing#basic-routing 
+
+
+https://www.c-sharpcorner.com/article/attribute-based-routing-in-asp-net-web-api-and-mvc-4/ 
+
+Routing Syntax
+Routing Laravel support 6 types of HTTP Request command
+
+
+Implementasi Sintaks Routing
+Routing terdiri atas 
+Method HTTP
+URL
+Handling Respond/ callback
+
+
+
+Satu sintaksis Routing memiliki format pada gambar di samping.
+Penjelasan:
+Route::get adalah sintaksis mendaftarkan Route untuk menanggapi Request Get dari client
+Route::get (‘foo’, ….) adalah sintaksis untuk menanggapi Request get dari client dengan URL (‘foo’). Pada browser, client menuliskan alamat website dengan sintaks BASE_URL/foo
+BASE_URL sesuai dengan ppt pertemuan 1 yaitu tergantung anda menjalankan servernya. Bila menjalakan dengan local development maka urlnya adalah http://127.0.0.1:8000/foo
+Function() { Return ‘Hello World’; }  adalah handling respond/callback dari request method GET dengan url foo. Maka Website Laravel akan memunculkan tulisan Hello World
+
+
+Letak File Routing
+Apabila anda menggunakan Laravel untuk berkomunikasi dengan HTTP, maka gunakan web.php
+Apabila anda menggunakan Laravel untuk berkomunikasi dengan API dan channel lain, bisa gunakan api.php dan channels.php
+Apabila anda membuat sintaks routing melalui console, maka gunakan console.php
+
+Kita fokus pada web.php terlebih dahulu
+
+View Routes
+https://laravel.com/docs/10.x/routing#view-routes 
+There is one special method that able to use since Laravel 7 🡪 Route::view()
+
+Trivia
+Please explain this code below
+
+Trivia (2)
+Diketahui server berjalan dengan Local Development
+Ada berapa URL yang dapat diakses pada project laravel tersebut?
+Bila browser dijalankan dengan sintaks: localhost:8000/ apakah mengeluarkan hasil FirstPage Laravel? Ya/Tidak
+Bila browser dijalankan dengan sintaks localhost:8000/profile apakah mengeluarkan hasil FirstPage Laravel? Ya/Tidak
+Bila browser dijalankan dengan sintaks localhost:8000/myprofile, maka layar akan mengeluarkan “Hello World, your name!”? Ya/Tidak
+Bila browser ingin dapat menjalankan sintaksis nomor 4, maka apa yang harus dilakukan pada file routes/web.php di slide sebelumnya?
+
+Mengapa perlu Router?
+Bila menilik dari pembelajaran Web yang lalu, maka akan timbul pertanyaan atau pemikiran: “Semester lalu saya bisa buat web tanpa menerapkan konsep router. Tinggal tembak nama filenya dan langsung muncul seperti contoh di bawah ini”
+
+
+
+
+
+Secara teknis, sintaksis tersebut benar dan bisa dilakukan namun dari sisi format url demikian akan susah dalam penggunaan friendly segment untuk keperluan SEO seperti pada gambar di bawah
+
+
+
+Type of Routing
+Two Type of Routing:
+Required Parameters
+Optional Parameters
+https://laravel.com/docs/10.x/routing#required-parameters 
+
+Routing Berparameter
+Routing berparameter terbagi atas 2 yaitu:
+Berparameter Wajib (Required Parameters)
+   
+
+
+ 
+   Kondisi di atas ingin melihat data lebih detail dari user ber-id = X (sesuai input)
+   Hal ini sama seperti: function user ($id) { ….. } 
+
+Berparameter Opsional (Opsional parameters)
+
+
+
+
+ Kondisi di atas ingin melihat data lebih detail dari user ber-id = X (sesuai input), 
+ namun apabila $name kosong, maka diberikan default value tertentu.
+   Hal ini sama seperti: function user ($id=0) { ….. } 
+
+Required Parameter
+Required Parameter terjadi apabila ada url yang mewajibkan data tertentu dikirim secara url seperti sintaksis berikut
+
+
+
+
+
+
+
+
+
+Dari sintaksis di atas, maka url yg diterima website adalah 
+localhost:8000/user/1 🡪 memunculkan User 1
+localhost:8000/user/2 🡪 memunculkan User 2
+localhost:8000/user/…. 🡪 memunculkan User ….
+localhost:8000/user 🡪 ERROR!!
+Angka 1,2, ….. Nanti akan masuk ke dalam variable $id dan secara logic handlingnya akan dimunculkan kembali ke layar akibat sintaks echo
+
+
+Contoh lain Required Parameter
+Posisi di atas berarti menangkap kebutuhan pada post dengan ketentuan:
+idPost = {post}
+idComment = {comment}
+
+Dengan contoh url:
+http://localhost:8000/posts/12/comments/9 --> mencari post ber-id = 12 dan comment ber-id = 9
+http://localhost:8000/posts/my-posting/comments/82ac --> mencari post ber-id = “my-posting” dan comment ber-id = 82ac
+
+
+
+Opsional Parameter
+Opsional Parameter terjadi apabila ada url yang tidak mewajibkan data tertentu dikirim secara url. Bila tidak ada data, maka ada perilaku lain yang perlu dihandling. Contoh sintaks dengan menambah tanda tanya ‘?’ pada parameter seperti sintaksis berikut. 
+
+
+
+
+
+
+
+
+
+
+
+Dari sintaksis di atas, maka url yg diterima website adalah 
+localhost:8000/user/1 🡪 memunculkan angka 1
+localhost:8000/user/2 🡪 memunculkan angka 2
+localhost:8000/user 🡪 memunculkan John karena default name = ‘John’
+Angka 1,2, ….. Nanti akan masuk ke dalam variable $id dan secara logic handlingnya akan dimunculkan kembali ke layar akibat sintaks echo
+
+
+Penamaan Routing
+Routing pada Laravel bisa diberi nama dan disarankan untuk diberi nama. Tujuan dari penamaan ini adalah kemudahan proses pemanggilan pada fase development berikutnya
+
+Cara pemanggilan Routing
+NB
+Sintaksis Route::get terletak pada file web.php
+$url = route (….) adalah sintaks pada Controller/View yang diperlukan untuk ditampilkan ke layar atau diproses. 
+
+Dengan pemberian nama, maka URL tadi tidak perlu menuliskan panjang. Cukup menuliskan nama routing saja.
+
+Studi Kasus
+Self-Ordering for Healthly Food System
+
+Self-Ordering for Healthly Food System
+Sejak tahun 2021, sistem self-ordering telah banyak diterapkan di berbagai restoran cepat saji seperti McDonald's dan IKEA di Indonesia. Sistem ini memungkinkan pelanggan untuk memesan makanan sendiri melalui kiosk digital atau aplikasi web, tanpa perlu berinteraksi langsung dengan kasir. Hal ini tidak hanya meningkatkan efisiensi layanan tetapi juga memberikan pengalaman yang lebih cepat dan nyaman bagi pelanggan.
+Di sisi lain, tren gaya hidup sehat semakin meningkat, dengan banyak orang lebih selektif dalam memilih makanan yang mereka konsumsi. Namun, restoran sehat sering kali memiliki sistem pemesanan yang kurang praktis dibandingkan restoran cepat saji. Oleh karena itu, sistem Self-Ordering for Healthly Food hadir sebagai solusi untuk memudahkan pelanggan dalam memesan makanan sehat dengan cepat, akurat, dan fleksibel. 
+Sistem ini adalah sebuah aplikasi berbasis web yang memungkinkan pelanggan untuk melakukan pemesanan makanan sehat secara mandiri melalui sebuah antarmuka interaktif. Sistem ini akan menyediakan fitur-fitur utama seperti:
+Menu Digital - Pelanggan dapat melihat daftar makanan dan minuman sehat yang tersedia, lengkap dengan informasi nutrisi dan harga.
+Kustomisasi Pesanan - Pelanggan dapat menyesuaikan pesanan mereka, seperti memilih jenis bahan, ukuran porsi, atau menghindari alergi tertentu.
+Metode Pemesanan  - Dine-in / Take-away
+Metode Pembayaran Digital - Pembayaran dilakukan secara cashless menggunakan dompet digital, kartu kredit/debit, atau QRIS.
+Notifikasi Status Pesanan - Setelah memesan, pelanggan akan mendapatkan status pesanan secara real-time, apakah sedang diproses atau sudah siap diambil.
+Dashboard Admin - Pihak restoran dapat mengelola menu, melihat riwayat pesanan, serta melaporkan data seperti (siapa member teraktif, siapa member terbanyak membeli, transaksi terbanyak, total omzet, produk terlaris, produk yg perlu diendorse)
+
+
+Praktik #1:
+Coba amati:
+https://www.behance.net/gallery/153664009/Food-Ordering-Kiosk 
+
+Coba buat 7 url berikut dan munculkan textnya
+BASE_URL/welcome 🡪 beri text “Selamat Datang”
+BASE_URL/before_order 🡪 beri text “Pilih DINE-IN atau Take Away”
+Gunakan Parameter. Setelah menu gunakan parameter untuk memenuhi method pemesanan dine-in atau take-away.
+BASE_URL/menu/dinein 🡪 beri text “Daftar menu Dine-in”
+BASE_URL/menu/takeaway 🡪 beri text “Daftar menu Take-away”
+Untuk bagian Administrasi
+BASE_URL/admin/categories/ 🡪 beri text “Portal Manajemen: Daftar Kategori”
+BASE_URL/admin/order 🡪 beri text “Portal Manajemen: Daftar Order”
+BASE_URL/admin/members/ 🡪 beri text “Portal Manajemen: Daftar Member”
+Buat routingnya dalam web/route.php
+
+10 menit silahkan mencoba5 menit pembahasan
+
+View
+
+View pada Laravel
+View pada laravel terletak pada ‘resources/views/’. Mereka memiliki extensi: ……blade.php.
+Dengan tambahan extensi pada file tersebut, maka file view dapat menerima Bahasa pemrograman HTML, PHP dan Blade
+
+Basic of Blade Template
+Blade Template adalah sintaks view dari laravel. Engine ini berbeda dengan engine pada framework lain, karena dengan BLADE template, anda tetap bisa menggunakan sintaksis PHP plain pada file view tersebut.
+
+Ciri khas sintaks blade adalah dengan adanya {{ ….. }} untuk mencetak / echo, annotation @if, @else, @for 
+Di dalam {{ … }} dan annotation terdapat variable atau sintaks PHP yang bisa dipakai
+
+Dokumentasi lengkap dapat anda akses di https://laravel.com/docs/10.x/blade#introduction 
+
+Simple Sintaks pada Blade
+Contoh: bila ada route seperti ini, berarti welcome mengirimkan data ‘name’ bernilai Samantha.
+
+
+
+
+
+ Maka pada file Blade Welcome, diganti sintaksis
+
+
+
+Agar nama Samantha bisa muncul di layar
+
+Simple Sintaksis pada Blade
+Bila melihat json_encode versi PHP akan sama seperti
+
+
+
+Versi Blade
+
+Sintaks IF pada blade
+
+Sintaks Loop pada blade
+
+Sintaks Loop pada blade
+
+Memberi link pada view
+https://laravel.com/docs/10.x/urls#accessing-the-current-url 
+
+Memberi link pada view Laravel dapat menggunakan 2 cara
+url(…..)
+     <a href= {{ url(‘admin/member’) }} > List Member </a>
+route(….)
+     < a href= {{ route(‘listmember’) }} > List Member </a>
+
+Keduanya akan berjalan baik apabila pada web.php terdapat sintaksis
+
+Route::get(‘admin/member’, function() {
+    return view (‘daftarmember’);
+})->name(‘listmember’);
+
+
+Praktik #2:
+Buat view-nya dengan pola
+Bila bentuk daftar gunakan “bootstrap html5 table” seperti link berikut:  https://getbootstrap.com/docs/4.1/content/tables/ atau https://www.w3schools.com/bootstrap/bootstrap_tables.asp
+Bila bentuk form gunakan “boostrap html form” contoh: https://getbootstrap.com/docs/4.0/components/forms/ 
+
+
+
+
+Praktik #2:
+Coba amati:
+https://www.behance.net/gallery/153664009/Food-Ordering-Kiosk 
+
+Coba buat 7 url berikut dan munculkan UInya
+BASE_URL/welcome 🡪 tampilan splash screen berisi judul aplikasi, deskripsi dan ada tombol Start Order
+BASE_URL/before_order 🡪 tampilan menu untuk makan ditempat atau bawa pulang
+Gunakan Parameter. Setelah menu gunakan parameter untuk memenuhi method pemesanan dine-in atau take-away.
+BASE_URL/menu/dinein 🡪 tampilan menu-menu yang bisa dipesan dalam dine-in
+BASE_URL/menu/takeaway 🡪 tampilan menu-menu yang bisa dipesan dalam takeaway.
+Untuk bagian Administrasi
+BASE_URL/admin/categories/ 🡪 daftar kategori menu bentuk table seperti: appetizer, main-course, dessert
+BASE_URL/admin/order 🡪 daftar seluruh order bentuk table
+BASE_URL/admin/members/ 🡪 daftar member bentuk table
+Implementasi view dengan teknik bootstrap
+
+Praktek #2
+Sebagai contoh detail:
+Bila mengakses localhost:8000/ maka munculkan halaman utama bisa berupa image statis/slide/carousel bootstrap untuk memberikan informasi sistem apa ini
+Bila mengakses localhost:8000/before_order/, maka munculkan 2 link (a href) yang mana menuju ke menu dine-in atau takeway. Gunakan sintaksis url() atau routes()
+Selebihnya gunakan bootstrap table, grid dan dive pada umumnya. Silakan berkreasi.
+Gunakan bootstrap dan kreatifkan website anda dengan berbagai macam css ataupun template sederhana. Gunakan keilmuan Web Programming dan Full-stack Anda. 
+
+
+
+Additional Info
+Pada praktik kita menggunakan bootstrap. Silakan pelajari berbagai sumber bootstrap
+
+http://www.w3schools.com/Bootstrap/default.asp 
+https://getbootstrap.com/docs/4.0/layout/grid/ 
+http://www.w3schools.com/Bootstrap/bootstrap_tables.asp 
+http://www.w3schools.com/Bootstrap/bootstrap_alerts.asp 
+http://www.w3schools.com/Bootstrap/bootstrap_carousel.asp 
+https://getbootstrap.com/docs/4.0/examples/album/ 
+
+
+
+Terima Kasih

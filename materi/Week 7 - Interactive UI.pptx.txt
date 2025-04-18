@@ -1,0 +1,546 @@
+Web Framework Programming
+WEEK 07Informatics Engineering
+Universitas Surabaya
+Interactive UIModal & Ajax with JQuery
+Informatics Engineering | Universitas Surabaya
+Cover Half
+
+Gambar vector bisa didownload di: https://scale.flexiple.com/illustrations/
+Jika ingin foto free royalty bisa download di: https://pixabay.com/photos/
+
+
+Outline
+Modals UI
+Ajax Concept
+Ajax in Laravel
+Implementing Ajax in a Dynamic Modal
+1
+2
+4
+3
+Informatics Engineering | Universitas Surabaya
+
+Modals UI
+3
+Informatics Engineering | Universitas Surabaya
+
+A modal window is an element that sits on top of an application’s main window. It creates a mode that disables the main window but keeps it visible with the modal window as a child window in front of it. Users must interact with the modal window before they can return to the parent application. — Wikipedia
+
+Example: https://getbootstrap.com/docs/4.0/components/modal/ 
+What is Modal
+Informatics Engineering | Universitas Surabaya
+
+Grab the user’s attention
+If you want to interrupt a user’s current task to catch the user’s attention to something more substantial.
+
+Need user input
+If you want to get information from the user. Ex. sign up or login form.
+
+Show additional information in context.
+If you want to show additional information without losing the context of the parent page. Ex. showing larger images or videos.
+
+Show additional information (not in context)
+If you want to show information that is not directly related to the parent page or other options that are “independent” from other pages. Ex. notifications.
+
+When we use modal ?
+Informatics Engineering | Universitas Surabaya
+
+Modal Content can be Static or Dynamic
+Modal Structure
+Informatics Engineering | Universitas Surabaya
+For AdminLTE4, we use this link: 
+https://adminlte.io/themes/v3/pages/UI/modals.html 
+https://getbootstrap.com/docs/5.3/components/modal/ 
+
+For additional JavaScript or CSS, we can use @stack and @push syntax on Blade Template Laravel.
+
+@stack('name'): This directive in your layout view defines a named stack, which is essentially an array where you can push multiple pieces of content. It will render all the items that have been pushed onto this stack.
+
+@push('name') ... @endpush: This directive in a child view adds content onto the specified named stack. You can push individual strings or blocks of HTML/Blade code. Importantly, you can @push multiple times to the same stack from different parts of your views.
+We need additonal javascript or CSS based on child layout
+Informatics Engineering | Universitas Surabaya
+
+For information:
+After Title tag, there are 2 scripts: (product_detail.js & console log) 
+We can put @push inside @section or after @endsection
+
+What the differences between @yield/@section and @stack/@push
+Feature
+@section / @yield
+@push / @stack
+Purpose
+Define and inject a single block of content.
+Define a stack to accumulate and render multiple items.
+Cardinality
+One section in the child corresponds to one yield.
+Multiple pushes can contribute to a single stack.
+Replacement
+Child section content replaces the yield's default.
+Pushed content is added to the stack.
+Use Cases
+Defining layout parts (title, sidebar, main content).
+Including multiple CSS/JS files or inline scripts.
+
+Make sure you have boostrap JS and CSS before execution
+https://getbootstrap.com/docs/5.3/getting-started/introduction/ 
+
+CDN links
+As reference, here are our primary CDN links.
+Description                 URL
+CSS 	                https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css
+JS 	                https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js
+
+
+
+Check your layout (adminlte4)
+
+
+Exercise #1Showing Disclaimer - a simple static Modal in one page view
+11
+Informatics Engineering | Universitas Surabaya
+
+Two section for modals construction 
+Button to trigger modals
+Hidden Modal elements
+
+Modal Structure: Button
+Informatics Engineering | Universitas Surabaya
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+Modal Structure: Form Modal
+Informatics Engineering | Universitas Surabaya
+*put anywhere in the section content. Please try inside `List of Categories(Index of Category)` view.
+
+
+
+
+Exercise #2Show Photo Product Category
+18
+Informatics Engineering | Universitas Surabaya
+
+We use “storage” for images
+https://laravel.com/docs/10.x/filesystem#the-public-disk 
+
+Make a migration update for add column image in category table. 
+
+php artisan make:migration update_category_table
+
+
+
+Pre-requirements
+Informatics Engineering | Universitas Surabaya
+
+Make a shortcut folder (symlink) from storage to public folder with: php artisan storage:link 
+Make new folder inside storage. Ex: category to store some images for each category data. 
+ 
+Don’t forget to update data in your database.
+
+
+Pre-requirements (2)
+Informatics Engineering | Universitas Surabaya
+
+Symbolic Link (Symlink) is shortcut symbol that shared a references between public folder and storage folder. 
+
+If you make a directory inside public/storage, your new folder will be show up in your storage/app/public, and vice versa
+
+Pick 2 category first and download 1 image of it
+
+
+Migrate first
+
+Insert your data based on your uploaded file
+
+Create a dynamic modal form to access internal source(inside <td> data with a different ID). The modal content filled with images of the hotel and other information. Put the toggler button on each hotel record when looping the data.
+	
+
+Using Static Modal 
+Informatics Engineering | Universitas Surabaya
+
+First, add new column and give an action to trigger modal “imageModal”
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" 
+              data-bs-target="#imageModal-{{ $d->id }}">
+            Show
+</button>
+
+
+@push ('modals')
+            <!-- Modal {{ $d->id }} -->
+            <div class="modal fade" id="imageModal-{{ $d->id }}" tabindex="-1" aria-labelledby="imageModalLabel" 
+              aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="imageModalLabel">Gambar untuk Kategori {{$d->id}} </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    {{ $d->id }} - {{ $d->name }}
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            @endpush
+Second, implement Modal HTML
+Informatics Engineering | Universitas Surabaya
+
+Notes
+Use @push blade syntax
+Put your @push and html modal near your button tag html
+Modify your code based on your case study
+
+
+Don’t forget to insert @stack(‘modals’) in Your Layout
+
+
+Modify your modals html with <img src>
+Informatics Engineering | Universitas Surabaya
+Key point is “how to call image from storage?”. We use “asset” function and directly into public/storage
+
+Result
+Informatics Engineering | Universitas Surabaya
+Notes:
+Don’t forget to remove “save button”
+Make your image adaptive inside modal”
+
+You can try this trick: 
+<img class="img-responsive" style="max-height:250px;" src="#" />
+
+AJAX Concept
+36
+Informatics Engineering | Universitas Surabaya
+
+AJAX (Asynchronous JavaScript and XML) is a set of web development techniques utilizing many web technologies used on the client-side to create asynchronous Web applications. 
+Import jquery library in your view file to use ajax functions of jquery which will be used to send and receive data using ajax from the server. 
+On the server side you can use the response() function to send response to client and to send response in JSON format you can chain the response function with json() function
+
+
+AJAX
+Informatics Engineering | Universitas Surabaya
+
+Script JQuery AJAX is implemented in a view. 
+In a certain event handler , JQuery Ajax will request to spesific URL and will be accepted by Controller which next it will returning a json
+The callback of JQuery ajax result will get the json, may be process it, and show it in a defined user interface
+
+AJAX in View & Controller
+Informatics Engineering | Universitas Surabaya
+
+Exercise #3Using AJAX
+39
+Informatics Engineering | Universitas Surabaya
+
+Exercise #3 : Show a simple message with AJAX
+Informatics Engineering | Universitas Surabaya
+
+Add the link and its event which calling jquery AJAX
+Code the above Javascript function, Define command HTTP, suggested a POST method (more secure)
+Define route and the used Controller
+Create the Controller
+Step
+Informatics Engineering | Universitas Surabaya
+
+1. EXAMPLE: Add the bulb icon and its event which calling jquery AJAX function in your view.
+Informatics Engineering | Universitas Surabaya
+<h2>Category with Hover Rows</h2>
+  <p>The <a href="#“ onclick=“showinfo()”>.table-hover</a> class enables a hover state on table rows</p>
+ 
+
+2. Define Route and  Modify Controller
+Informatics Engineering | Universitas Surabaya
+Route::post("/category/showInfo",[CategoryController::class, 'showInfo'])->name("category.showInfo");
+
+After this, we are going to use “category.showInfo” routes as the target url of our AJAX.
+
+We will create the “showInfo” function in the CategoryController later.
+
+3. Code the javascript function
+Informatics Engineering | Universitas Surabaya
+Code the function in the category.index blade, put the codes below in a section. Since we are using section with different name, so we need to prepare a yield inside the head element of the layout.
+@push("script")
+<script>
+    function showInfo() {
+      $.ajax({
+        type: 'POST',
+        url: '{{ route("category.showInfo") }}',
+        data: '_token=<?php echo csrf_token(); ?>',
+        success: function(data) {
+          $('#showinfo').html(data.msg);
+        }
+      });
+    }
+  </script>
+@endpush
+Add this in the parent layout at the end of Script section
+
+3. Code the javascript function : Explanation
+Informatics Engineering | Universitas Surabaya
+‘data.msg’ is a json object which will be generated by the Controller
+It is a mandatory for using  _token when using POST method 
+@push("script")
+<script>
+    function showInfo() {
+      $.ajax({
+        type: 'POST',
+        url: '{{ route("category.showInfo") }}',
+        data: '_token=<?php echo csrf_token(); ?>',
+        success: function(data) {
+          $('#showinfo').html(data.msg);
+        }
+      });
+    }
+  </script>
+@endpush
+JQuery ajax syntax is using  $.ajax followed by these parameters:
+
+type 🡪 command HTTP, 
+url 🡪 routing destination, 
+data 🡪 parameter/data that parsed to the route
+success 🡪callback/action function that will execute when success
+
+As default, Data transferred in the callback function is in a form of JSON
+
+
+3. Code the javascript function : Implementation
+Informatics Engineering | Universitas Surabaya
+Don’t forget to implement this section
+
+Exercise #4Implement AJAX
+47
+Informatics Engineering | Universitas Surabaya
+
+
+Don’t forget to add JQUERY JS before @stack(‘script’)
+
+Please insert this code inside your Parent View (Layout)
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+
+4. Implement showInfo function inside Controller
+Informatics Engineering | Universitas Surabaya
+Place it in the CategoryController. 
+Use method response()->json() to create json data.
+Data in array with some pairs of ‘key’ and ‘value’
+return response()->json(array(
+            'status' => 'oke',
+            'msg' => "<div class='alert alert-info'>
+  Tutorial membuat boostrap stripe ada di            https://getbootstrap.com/docs/4.0/content/tables/ .'</div>"
+        ), 200);
+
+Issue error 🡪 Check your Javascript FIRST (Missing function name)
+If you have an unresponsive action, please open: Right Click > Inspect Element > Console
+If you have an error like this, please check your script code is already loaded or not. Use Ctrl+U instead
+
+
+
+
+
+
+
+
+
+
+
+In this case, our code is wrong, because
+function showInfo uses ‘s’ character lowercase and ‘I’ uppercase
+But, programmer call with “showinfo” in onclick action
+
+
+
+
+Issue error 🡪 Check your Javascript FIRST (Missing JQuery to understand $ syntax)
+If you have an unresponsive action, please open: Right Click > Inspect Element > Console
+If you have an error like this, please check your script code is already loaded or not. Use Ctrl+U instead
+
+
+
+
+
+
+
+
+
+
+
+In this case, we have to check 
+JQuery JS is already loaded before we call ajax syntax
+Use Find and type “Jquery”. 
+If there is no Jquery JS, please insert first inside your Layout Blade
+
+
+It’s visible to check AJAX Process
+
+Inspect Element > Network
+Refresh Again until you see all processes
+Click link with Ajax
+There is one request network based on your code.
+If status 200, your request is completely successful. But if you have error, you need to inspect more deep
+
+
+
+
+If you have 500 ERROR, so programmer must fix it.
+Check deeper into “Request” and “Response”
+In this case, programmer must check “Is there any wrong or typo between function name in Controller and function name inside Router?”
+
+
+Exercise #4 : Add new action by reuse/modify exercise #3 to show the Category name where has the highest number of food variant
+Informatics Engineering | Universitas Surabaya
+(in the future, when we already have a transaction, it can be changed with more useful information like the most selling product, etc)
+
+
+#4. Example for add query in new link
+Informatics Engineering | Universitas Surabaya
+public function showInfo() {
+    $highestFoodCategory = Category::withCount('foods')
+    ->orderByDesc('foods_count')
+    ->first(); 
+
+    return response()->json(array(
+            'status' => 'oke',
+            'msg' => "<div class='alert alert-danger'>
+            The highest amount of food is  <b>'".$highestFoodCategory->name.“</b></div>"
+        ), 200);
+}
+
+Exercise #5Make a Modal for showing foods in master category (replace bullet point)
+61
+Informatics Engineering | Universitas Surabaya
+
+We need to change this with modals for elevate the efficient of User Interface
+
+
+1. Prepare : Blank Modal Form
+Informatics Engineering | Universitas Surabaya
+Still in category/index.blade.php , we will create the modal header, modal body, and modal footer from a View, therefore we will clear the modal-content (or put with an animated loading gif)
+@push ('modals')
+<!-- Modal -->
+<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="detail-title">List of </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id=”detail-body”>
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+@endpush
+
+
+2. Add the Link and its event which calling jquery AJAX Function
+Informatics Engineering | Universitas Surabaya
+<td>
+<button type="button" class="btn btn-info" data-bs-toggle="modal" 
+              data-bs-target="#detailModal“ onclick="showDetail({{ $d->id }} >
+            Details
+</button>
+
+…
+</td>
+
+
+
+Route::post("/category/showListFoods",
+            [CategoryController::class, 'showListFoods'])
+        ->name("category.showListFoods");
+
+In the next step, we are going to use AJAX and redirect the data by using route ‘category.showListFoods’.
+We need 1 parameter to know specific category, but we parse inside the AJAX. So we don’t to make required parameter inside Routing.
+
+Don’t forget to create the function ‘showListFoods’ in CategoryController later.
+3. Define Route and Controller for AJAX Data
+Informatics Engineering | Universitas Surabaya
+
+Check with: php artisan route:list
+
+4. Code the javascript function
+Informatics Engineering | Universitas Surabaya
+Code the function in the category.index blade, put the codes below in a section. 
+function showDetail(id) {
+      $.ajax({
+        type: 'POST',
+        url: '{{ route("category.showListFoods") }}’,
+        data: { 
+                '_token': '<?php echo csrf_token(); ?>',
+                'idcat': id,
+              },
+        success: function(data) {
+          $('#detail-title').html(data.title);
+          $('#detail-body').html(data.body);
+        }
+      });
+    }
+
+
+
+5. Implement showListFoods inside CategoryController
+Informatics Engineering | Universitas Surabaya
+Make sure you are already make relationship of category and foods
+
+Render make json can accept html code
+
+public function showListFoods()
+    {
+        $category = Category::find($_POST['idcat']);
+        $name = $category->name;
+        $data = $category->foods;
+        return response()->json(array(
+                'status' => 'oke',
+                'title' => $name.' Food List',
+                'body' => view('category.showListFood', compact('name', 'data'))->render()
+              ), 200);
+    }
+
+
+6. Create a new View
+Informatics Engineering | Universitas Surabaya
+<ul>
+@foreach ($data as $f)
+  <li>{{$f->name}}</li>
+@endforeach
+</ul>
+Create in view\category\showListFood.blade.php
+You can try to run at this point  to check whether the modal is running well and get the hotel name or not.
+
+
+
+Debug your codes by accessing the console on your browser. You can access it through “Inspect Element”.
+
+
+Check the Debugging Example to get more detailed tips on debugging.
+Find any error ?
+Informatics Engineering | Universitas Surabaya
+
+Thank You
+79
+Informatics Engineering | Universitas Surabaya
