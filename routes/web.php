@@ -21,19 +21,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// User Routes
+// User 
 Route::get('/', [HomeController::class, 'index'])->name('welcome');
 Route::get('/before_order', [HomeController::class, 'beforeOrder'])->name('before.order');
 
-// Menu Routes
+// Menu 
 Route::get('/menu/{type}', [MenuController::class, 'index'])->name('menu.index');
 
-// Order Routes
+// Order 
 Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 Route::get('/payment/{order_id}', [OrderController::class, 'payment'])->name('payment.index');
 Route::post('/payment/{order_id}', [OrderController::class, 'processPayment'])->name('payment.process');
 
-// Admin Routes
+// Admin 
 Route::prefix('admin')->name('admin.')->group(function () {
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
