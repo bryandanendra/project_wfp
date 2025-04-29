@@ -259,10 +259,33 @@
         });
         
         // View cart
-        document.getElementById('viewCart').addEventListener('click', function() {
+        document.getElementById('viewCart').addEventListener('click', function(event) {
+            // Prevent default behavior if needed
+            event.preventDefault();
+            
+            // Ensure any existing toasts are removed to prevent blocking interaction
+            const existingToasts = document.querySelectorAll('.toast-container, [class*="toast"]');
+            existingToasts.forEach(toast => {
+                if (toast && toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            });
+            
             updateCartDisplay();
-            const modal = new bootstrap.Modal(document.getElementById('cartModal'));
-            modal.show();
+            
+            // Make sure modal exists and is properly initialized
+            const cartModalElement = document.getElementById('cartModal');
+            if (!cartModalElement) {
+                console.error('Cart modal element not found');
+                return;
+            }
+            
+            try {
+                const modal = new bootstrap.Modal(cartModalElement);
+                modal.show();
+            } catch (error) {
+                console.error('Error showing cart modal:', error);
+            }
         });
         
         // Checkout button
@@ -348,10 +371,20 @@
             
             updateCartDisplay();
             
+            // Remove any existing toast containers to prevent stacking or interference
+            const existingToasts = document.querySelectorAll('.toast-container');
+            existingToasts.forEach(toast => {
+                if (toast && toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            });
+            
             // Show notification
             const toastContainer = document.createElement('div');
-            toastContainer.className = 'position-fixed top-0 end-0 p-3';
+            toastContainer.className = 'position-fixed top-0 end-0 p-3 toast-container';
             toastContainer.style.zIndex = '9999';
+            // Make sure toast doesn't block interactions
+            toastContainer.style.pointerEvents = 'none';
             
             toastContainer.innerHTML = `
                 <div class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
@@ -359,7 +392,7 @@
                         <div class="toast-body">
                             <i class="fas fa-check-circle me-2"></i> ${name} ditambahkan ke keranjang
                         </div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" style="pointer-events: auto;"></button>
                     </div>
                 </div>
             `;
@@ -370,7 +403,9 @@
             toast.show();
             
             toastEl.addEventListener('hidden.bs.toast', function () {
-                toastContainer.remove();
+                if (toastContainer && toastContainer.parentNode) {
+                    toastContainer.parentNode.removeChild(toastContainer);
+                }
             });
         }
         
@@ -383,13 +418,26 @@
             const totalItems = document.getElementById('totalItems');
             const totalPrice = document.getElementById('totalPrice');
             
+            // Check if elements exist before accessing their properties
+            if (!cartItemsContainer || !cartCount) {
+                console.error('Critical cart elements not found in the DOM');
+                return;
+            }
+            
             // Update cart count badge
             cartCount.textContent = cart.reduce((total, item) => total + item.quantity, 0);
             
             if (cart.length === 0) {
-                emptyCartMessage.style.display = 'block';
-                cartSummary.style.display = 'none';
-                checkoutBtn.disabled = true;
+                // Check if element exists before accessing style
+                if (emptyCartMessage) {
+                    emptyCartMessage.style.display = 'block';
+                }
+                if (cartSummary) {
+                    cartSummary.style.display = 'none';
+                }
+                if (checkoutBtn) {
+                    checkoutBtn.disabled = true;
+                }
                 cartItemsContainer.innerHTML = `
                     <div class="text-center py-5 empty-cart-message">
                         <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
@@ -398,9 +446,16 @@
                 return;
             }
             
-            emptyCartMessage.style.display = 'none';
-            cartSummary.style.display = 'flex';
-            checkoutBtn.disabled = false;
+            // Check if elements exist before accessing style
+            if (emptyCartMessage) {
+                emptyCartMessage.style.display = 'none';
+            }
+            if (cartSummary) {
+                cartSummary.style.display = 'flex';
+            }
+            if (checkoutBtn) {
+                checkoutBtn.disabled = false;
+            }
             
             let cartItemsHTML = '';
             cart.forEach((item, index) => {
@@ -440,9 +495,13 @@
             
             cartItemsContainer.innerHTML = cartItemsHTML;
             
-            // Update total items and price
-            totalItems.textContent = cart.reduce((total, item) => total + item.quantity, 0);
-            totalPrice.textContent = `Rp ${formatNumber(cart.reduce((total, item) => total + item.subtotal, 0))}`;
+            // Update total items and price if elements exist
+            if (totalItems) {
+                totalItems.textContent = cart.reduce((total, item) => total + item.quantity, 0);
+            }
+            if (totalPrice) {
+                totalPrice.textContent = `Rp ${formatNumber(cart.reduce((total, item) => total + item.subtotal, 0))}`;
+            }
             
             // Add event listeners for cart item controls
             document.querySelectorAll('.increase-quantity').forEach(button => {
