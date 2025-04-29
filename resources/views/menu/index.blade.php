@@ -350,7 +350,7 @@
             
             // Show notification
             const toastContainer = document.createElement('div');
-            toastContainer.className = 'position-fixed bottom-0 end-0 p-3';
+            toastContainer.className = 'position-fixed top-0 end-0 p-3';
             toastContainer.style.zIndex = '9999';
             
             toastContainer.innerHTML = `
