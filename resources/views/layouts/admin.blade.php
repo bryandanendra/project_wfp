@@ -78,7 +78,7 @@
                             <p>Pesanan</p>
                         </a>
                     </li>
-                    <li class="nav-item {{ request()->routeIs('admin.members.*') ? 'menu-open' : '' }}">
+                    <!-- <li class="nav-item {{ request()->routeIs('admin.members.*') ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link {{ request()->routeIs('admin.members.*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-users"></i>
                             <p>
@@ -106,7 +106,7 @@
                                 </a>
                             </li>
                         </ul>
-                    </li>
+                    </li> -->
                 </ul>
             </nav>
             <!-- /.sidebar-menu -->

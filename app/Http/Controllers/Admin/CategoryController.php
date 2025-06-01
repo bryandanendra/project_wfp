@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -25,14 +26,34 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required|max:255',
             'description' => 'nullable',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
 
         $data = $request->only(['name', 'description']);
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('public/categories');
-            $data['image'] = str_replace('public/', '', $path);
+            try {
+                // Mengubah nama file sesuai nama kategori
+                $imageName = Str::slug($request->name) . '-' . time() . '.' . $request->file('image')->getClientOriginalExtension();
+                
+                // Simpan file ke storage/app/public/categories dengan nama baru
+                $imagePath = $request->file('image')->storeAs('categories', $imageName, 'public');
+                
+                if (!$imagePath) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->withErrors(['image' => 'Gagal menyimpan gambar. Silakan coba lagi.']);
+                }
+                
+                $data['image'] = $imagePath;
+            } catch (\Exception $e) {
+                // Log error untuk debugging
+                \Log::error('Upload image error: ' . $e->getMessage());
+                
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['image' => 'Terjadi kesalahan saat upload: ' . $e->getMessage()]);
+            }
         }
 
         Category::create($data);
@@ -56,19 +77,39 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required|max:255',
             'description' => 'nullable',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
 
         $data = $request->only(['name', 'description']);
 
         if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($category->image && Storage::exists('public/' . $category->image)) {
-                Storage::delete('public/' . $category->image);
-            }
+            try {
+                // Delete old image if exists
+                if ($category->image && Storage::disk('public')->exists($category->image)) {
+                    Storage::disk('public')->delete($category->image);
+                }
 
-            $path = $request->file('image')->store('public/categories');
-            $data['image'] = str_replace('public/', '', $path);
+                // Mengubah nama file sesuai nama kategori
+                $imageName = Str::slug($request->name) . '-' . time() . '.' . $request->file('image')->getClientOriginalExtension();
+                
+                // Simpan file ke storage/app/public/categories dengan nama baru
+                $imagePath = $request->file('image')->storeAs('categories', $imageName, 'public');
+                
+                if (!$imagePath) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->withErrors(['image' => 'Gagal menyimpan gambar. Silakan coba lagi.']);
+                }
+                
+                $data['image'] = $imagePath;
+            } catch (\Exception $e) {
+                // Log error untuk debugging
+                \Log::error('Upload image error: ' . $e->getMessage());
+                
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['image' => 'Terjadi kesalahan saat upload: ' . $e->getMessage()]);
+            }
         }
 
         $category->update($data);

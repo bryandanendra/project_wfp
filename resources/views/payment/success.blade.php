@@ -30,11 +30,28 @@
                             <p><strong>Metode Pembayaran:</strong> {{ $payment->paymentMethod->name }}</p>
                             <p><strong>ID Transaksi:</strong> {{ $payment->transaction_id }}</p>
                             <p><strong>Status Pembayaran:</strong> <span class="badge bg-success">{{ ucfirst($payment->status) }}</span></p>
+                            
+                            @if($payment->paymentMethod->name === 'QRIS')
+                            <div class="alert alert-info mt-3">
+                                <p class="mb-0"><i class="fas fa-info-circle me-2"></i> Pembayaran QRIS telah diverifikasi. Bukti pembayaran digital telah dikirim ke sistem kami.</p>
+                            </div>
+                            @endif
                         </div>
                     </div>
                     
-                    <div class="alert alert-info">
-                        <p class="mb-0">Silakan tunjukkan nomor pesanan ini ke kasir untuk pengambilan pesanan Anda.</p>
+                    <div class="alert alert-info mb-4">
+                        @if($order->order_type == 'dine_in')
+                            <p class="mb-0">Pesanan Anda akan segera diantarkan ke meja {{ $order->table_number }}.</p>
+                        @else
+                            <p class="mb-0">Silakan tunjukkan nomor pesanan ini ke kasir untuk pengambilan pesanan Anda.</p>
+                        @endif
+                    </div>
+                    
+                    <div class="alert alert-success">
+                        <p class="mb-2"><i class="fas fa-bell me-2"></i> Anda dapat memantau status pesanan Anda secara real-time!</p>
+                        <a href="{{ route('order.status', $order->order_number) }}" class="btn btn-success">
+                            <i class="fas fa-eye me-2"></i>Pantau Status Pesanan
+                        </a>
                     </div>
                     
                     <div class="mt-4">

@@ -3,6 +3,7 @@
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\FoodController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
@@ -32,6 +33,10 @@ Route::get('/menu/{type}', [MenuController::class, 'index'])->name('menu.index')
 Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 Route::get('/payment/{order_id}', [OrderController::class, 'payment'])->name('payment.index');
 Route::post('/payment/{order_id}', [OrderController::class, 'processPayment'])->name('payment.process');
+
+// Order Status
+Route::get('/order-status/{order_number}', [OrderStatusController::class, 'show'])->name('order.status');
+Route::get('/api/order-status/{order_number}', [OrderStatusController::class, 'getStatus'])->name('api.order.status');
 
 // Admin 
 Route::prefix('admin')->name('admin.')->group(function () {

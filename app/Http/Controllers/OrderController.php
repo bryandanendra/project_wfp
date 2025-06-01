@@ -51,7 +51,10 @@ class OrderController extends Controller
                 'quantity' => $item['quantity'],
                 'price' => $food->price,
                 'subtotal' => $food->price * $item['quantity'],
-                'special_instructions' => $item['special_instructions'] ?? null
+                'special_instructions' => $item['special_instructions'] ?? null,
+                'customization_ingredients' => $item['customization_ingredients'] ?? null,
+                'customization_portion_size' => $item['customization_portion_size'] ?? null,
+                'customization_allergies' => $item['customization_allergies'] ?? null
             ]);
         }
 
@@ -78,6 +81,14 @@ class OrderController extends Controller
 
         $order = Order::findOrFail($orderId);
         $paymentMethod = PaymentMethod::findOrFail($request->payment_method_id);
+        
+        // Generate transaction ID
+        $transactionId = 'TRX-' . Str::random(8);
+        
+        // Handle QRIS payment specifically
+        if ($paymentMethod->name === 'QRIS') {
+            $transactionId = 'QRIS-' . Str::random(8);
+        }
 
         // Process payment
         // In a real application, you would integrate with a payment gateway here
@@ -86,7 +97,7 @@ class OrderController extends Controller
         $payment = $order->payment()->create([
             'payment_method_id' => $paymentMethod->id,
             'amount' => $order->total_amount,
-            'transaction_id' => 'TRX-' . Str::random(8),
+            'transaction_id' => $transactionId,
             'status' => 'completed'
         ]);
 
@@ -95,7 +106,8 @@ class OrderController extends Controller
 
         return view('payment.success', [
             'order' => $order,
-            'payment' => $payment
+            'payment' => $payment,
+            'showStatusButton' => true
         ]);
     }
 }

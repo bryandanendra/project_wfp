@@ -7,6 +7,7 @@ use App\Models\Food;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class FoodController extends Controller
 {
@@ -30,7 +31,7 @@ class FoodController extends Controller
             'nutrition_facts' => 'required',
             'price' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
             'is_active' => 'boolean'
         ]);
 
@@ -43,8 +44,28 @@ class FoodController extends Controller
         $data['is_active'] = $request->has('is_active');
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('public/foods');
-            $data['image'] = str_replace('public/', '', $path);
+            try {
+                // Mengubah nama file sesuai nama menu
+                $imageName = Str::slug($request->name) . '-' . time() . '.' . $request->file('image')->getClientOriginalExtension();
+                
+                // Simpan file ke storage/app/public/foods dengan nama baru
+                $imagePath = $request->file('image')->storeAs('foods', $imageName, 'public');
+                
+                if (!$imagePath) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->withErrors(['image' => 'Gagal menyimpan gambar. Silakan coba lagi.']);
+                }
+                
+                $data['image'] = $imagePath;
+            } catch (\Exception $e) {
+                // Log error untuk debugging
+                \Log::error('Upload image error: ' . $e->getMessage());
+                
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['image' => 'Terjadi kesalahan saat upload: ' . $e->getMessage()]);
+            }
         }
 
         Food::create($data);
@@ -73,7 +94,7 @@ class FoodController extends Controller
             'nutrition_facts' => 'required',
             'price' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
             'is_active' => 'boolean'
         ]);
 
@@ -86,13 +107,33 @@ class FoodController extends Controller
         $data['is_active'] = $request->has('is_active');
 
         if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($food->image && Storage::exists('public/' . $food->image)) {
-                Storage::delete('public/' . $food->image);
-            }
+            try {
+                // Delete old image if exists
+                if ($food->image && Storage::disk('public')->exists($food->image)) {
+                    Storage::disk('public')->delete($food->image);
+                }
 
-            $path = $request->file('image')->store('public/foods');
-            $data['image'] = str_replace('public/', '', $path);
+                // Mengubah nama file sesuai nama menu
+                $imageName = Str::slug($request->name) . '-' . time() . '.' . $request->file('image')->getClientOriginalExtension();
+                
+                // Simpan file ke storage/app/public/foods dengan nama baru
+                $imagePath = $request->file('image')->storeAs('foods', $imageName, 'public');
+                
+                if (!$imagePath) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->withErrors(['image' => 'Gagal menyimpan gambar. Silakan coba lagi.']);
+                }
+                
+                $data['image'] = $imagePath;
+            } catch (\Exception $e) {
+                // Log error untuk debugging
+                \Log::error('Upload image error: ' . $e->getMessage());
+                
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['image' => 'Terjadi kesalahan saat upload: ' . $e->getMessage()]);
+            }
         }
 
         $food->update($data);

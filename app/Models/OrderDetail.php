@@ -15,7 +15,10 @@ class OrderDetail extends Model
         'quantity',
         'price',
         'subtotal',
-        'special_instructions'
+        'special_instructions',
+        'customization_ingredients',
+        'customization_portion_size',
+        'customization_allergies'
     ];
 
     public function order()

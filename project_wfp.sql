@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Apr 18, 2025 at 02:14 PM
+-- Generation Time: Jun 01, 2025 at 06:03 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -89,11 +89,12 @@ CREATE TABLE `foods` (
 --
 
 INSERT INTO `foods` (`id`, `name`, `description`, `nutrition_facts`, `price`, `image`, `category_id`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, 'Nasi Merah dengan Ayam Panggang Kecap & Tumis Kangkung', 'Nikmati hidangan sehat dan lezat dengan Nasi Merah yang kaya serat, dipadukan dengan Ayam Panggang Kecap yang manis gurih dan Tumis Kangkung yang segar. Kombinasi sempurna untuk santapan yang mengenyangkan dan bergizi.', 'Kalori: 450 kkal\nProtein: 35 gram\nLemak: 20 gram\nKarbohidrat: 60 gram\nSerat: 7 gram', 35000.00, 'foods/nasi-merah-ayam.jpg', 2, 1, '2025-04-18 03:52:22', '2025-04-18 03:52:22'),
-(2, 'Salad Bowl dengan Quinoa, Alpukat, dan Potongan Ayam Panggang', 'Salad sehat dan bergizi dengan Quinoa yang kaya protein, alpukat yang kaya akan lemak sehat, dan ayam panggang yang lezat. Disiram dengan saus vinaigrette lemon yang segar.', 'Kalori: 380 kkal\nProtein: 25 gram\nLemak: 22 gram\nKarbohidrat: 30 gram\nSerat: 9 gram', 40000.00, 'foods/salad-bowl-quinoa.jpg', 1, 1, '2025-04-18 03:52:22', '2025-04-18 03:52:22'),
-(3, 'Smoothie Bowl Buah Naga dan Pisang', 'Smoothie bowl segar dengan campuran buah naga, pisang, dan tambahan granola serta buah-buahan segar di atasnya. Sarapan sehat yang menyegarkan dan mengenyangkan.', 'Kalori: 320 kkal\nProtein: 8 gram\nLemak: 5 gram\nKarbohidrat: 65 gram\nSerat: 12 gram', 30000.00, 'foods/smoothie-bowl.jpg', 4, 1, '2025-04-18 03:52:22', '2025-04-18 03:52:22'),
-(4, 'Green Detox Juice', 'Jus detox hijau dengan campuran apel, mentimun, bayam, dan lemon. Minuman sehat yang menyegarkan dan membantu membersihkan tubuh Anda.', 'Kalori: 120 kkal\nProtein: 2 gram\nLemak: 0 gram\nKarbohidrat: 28 gram\nSerat: 4 gram', 25000.00, 'foods/green-detox-juice.jpg', 7, 1, '2025-04-18 03:52:22', '2025-04-18 03:52:22'),
-(5, 'Kopi Hitam Organik', 'Kopi hitam organik dengan biji kopi pilihan yang digiling segar. Nikmati rasa kopi yang kaya dan aroma yang menggoda.', 'Kalori: 5 kkal\nProtein: 0 gram\nLemak: 0 gram\nKarbohidrat: 0 gram\nSerat: 0 gram', 20000.00, 'foods/kopi-hitam-organik.jpg', 5, 1, '2025-04-18 03:52:22', '2025-04-18 03:52:22');
+(1, 'Nasi Merah dengan Ayam Panggang Kecap & Tumis Kangkung', 'Nikmati hidangan sehat dan lezat dengan Nasi Merah yang kaya serat, dipadukan dengan Ayam Panggang Kecap yang manis gurih dan Tumis Kangkung yang segar. Kombinasi sempurna untuk santapan yang mengenyangkan dan bergizi.', 'Kalori: 450 kkal\r\nProtein: 35 gram\r\nLemak: 20 gram\r\nKarbohidrat: 60 gram\r\nSerat: 7 gram', 35000.00, 'foods/nasi-merah-dengan-ayam-panggang-kecap-tumis-kangkung-1748745345.jpg', 2, 1, '2025-04-18 03:52:22', '2025-05-31 19:35:45'),
+(2, 'Salad Bowl dengan Quinoa, Alpukat, dan Potongan Ayam Panggang', 'Salad sehat dan bergizi dengan Quinoa yang kaya protein, alpukat yang kaya akan lemak sehat, dan ayam panggang yang lezat. Disiram dengan saus vinaigrette lemon yang segar.', 'Kalori: 380 kkal\r\nProtein: 25 gram\r\nLemak: 22 gram\r\nKarbohidrat: 30 gram\r\nSerat: 9 gram', 40000.00, 'foods/salad-bowl-dengan-quinoa-alpukat-dan-potongan-ayam-panggang-1748745429.jpg', 1, 1, '2025-04-18 03:52:22', '2025-05-31 19:37:09'),
+(3, 'Smoothie Bowl Buah Naga dan Pisang', 'Smoothie bowl segar dengan campuran buah naga, pisang, dan tambahan granola serta buah-buahan segar di atasnya. Sarapan sehat yang menyegarkan dan mengenyangkan.', 'Kalori: 320 kkal\r\nProtein: 8 gram\r\nLemak: 5 gram\r\nKarbohidrat: 65 gram\r\nSerat: 12 gram', 30000.00, 'foods/smoothie-bowl-buah-naga-dan-pisang-1748745575.jpg', 4, 1, '2025-04-18 03:52:22', '2025-05-31 19:39:35'),
+(4, 'Green Detox Juice', 'Jus detox hijau dengan campuran apel, mentimun, bayam, dan lemon. Minuman sehat yang menyegarkan dan membantu membersihkan tubuh Anda.', 'Kalori: 120 kkal\r\nProtein: 2 gram\r\nLemak: 0 gram\r\nKarbohidrat: 28 gram\r\nSerat: 4 gram', 25000.00, 'foods/green-detox-juice-1748745583.jpg', 7, 1, '2025-04-18 03:52:22', '2025-05-31 19:39:43'),
+(5, 'Kopi Hitam Organik', 'Kopi hitam organik dengan biji kopi pilihan yang digiling segar. Nikmati rasa kopi yang kaya dan aroma yang menggoda.', 'Kalori: 5 kkal\r\nProtein: 0 gram\r\nLemak: 0 gram\r\nKarbohidrat: 0 gram\r\nSerat: 0 gram', 20000.00, 'foods/kopi-hitam-organik-1748745597.jpg', 5, 1, '2025-04-18 03:52:22', '2025-05-31 19:39:57'),
+(6, 'Chitato', 'ciki ringan', '120kkal\r\n2g protein', 5000.00, 'foods/chitato-1748745624.jpg', 3, 1, '2025-05-31 19:12:53', '2025-05-31 19:40:24');
 
 -- --------------------------------------------------------
 
@@ -176,7 +177,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (9, '2025_04_18_104326_create_payments_table', 1),
 (10, '2025_04_18_104331_create_members_table', 1),
 (11, '2025_04_18_104800_add_foreign_keys_to_tables', 1),
-(12, '2025_04_18_120704_update_mysql_sql_mode', 2);
+(12, '2025_04_18_120704_update_mysql_sql_mode', 2),
+(13, '2025_06_01_013804_add_customization_fields_to_order_details_table', 3);
 
 -- --------------------------------------------------------
 
@@ -197,6 +199,20 @@ CREATE TABLE `orders` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `member_id`, `order_number`, `order_type`, `table_number`, `total_amount`, `status`, `notes`, `created_at`, `updated_at`) VALUES
+(1, NULL, 'ORD-7ngSduwd', 'dine_in', '1', 55000.00, 'processing', 'apa', '2025-04-29 00:46:25', '2025-04-29 00:46:32'),
+(2, NULL, 'ORD-669BdZka', 'take_away', NULL, 75000.00, 'processing', 'ok', '2025-05-31 18:29:56', '2025-05-31 18:30:09'),
+(3, NULL, 'ORD-zcqufIdG', 'dine_in', '12', 35000.00, 'processing', NULL, '2025-05-31 18:41:28', '2025-05-31 18:41:32'),
+(4, NULL, 'ORD-nAk9xkB6', 'take_away', NULL, 40000.00, 'completed', NULL, '2025-05-31 18:47:04', '2025-05-31 18:54:28'),
+(5, NULL, 'ORD-l9IEKAqN', 'dine_in', '1', 20000.00, 'completed', NULL, '2025-05-31 18:55:21', '2025-05-31 18:56:16'),
+(6, NULL, 'ORD-zRiw8gcW', 'take_away', NULL, 75000.00, 'completed', 'tidak pedas', '2025-05-31 18:56:57', '2025-05-31 18:57:33'),
+(7, NULL, 'ORD-guTJifYs', 'take_away', NULL, 5000.00, 'cancelled', NULL, '2025-05-31 19:51:08', '2025-05-31 19:51:34'),
+(8, NULL, 'ORD-6MdWyqCn', 'dine_in', '7', 35000.00, 'processing', NULL, '2025-05-31 19:52:08', '2025-05-31 19:55:43');
+
 -- --------------------------------------------------------
 
 --
@@ -211,9 +227,29 @@ CREATE TABLE `order_details` (
   `price` decimal(10,2) NOT NULL,
   `subtotal` decimal(10,2) NOT NULL,
   `special_instructions` text DEFAULT NULL,
+  `customization_ingredients` varchar(255) DEFAULT NULL,
+  `customization_portion_size` varchar(255) DEFAULT NULL,
+  `customization_allergies` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `order_details`
+--
+
+INSERT INTO `order_details` (`id`, `order_id`, `food_id`, `quantity`, `price`, `subtotal`, `special_instructions`, `customization_ingredients`, `customization_portion_size`, `customization_allergies`, `created_at`, `updated_at`) VALUES
+(1, 1, 5, 1, 20000.00, 20000.00, NULL, NULL, NULL, NULL, '2025-04-29 00:46:25', '2025-04-29 00:46:25'),
+(2, 1, 1, 1, 35000.00, 35000.00, NULL, NULL, NULL, NULL, '2025-04-29 00:46:25', '2025-04-29 00:46:25'),
+(3, 2, 1, 1, 35000.00, 35000.00, NULL, NULL, NULL, NULL, '2025-05-31 18:29:56', '2025-05-31 18:29:56'),
+(4, 2, 2, 1, 40000.00, 40000.00, NULL, NULL, NULL, NULL, '2025-05-31 18:29:56', '2025-05-31 18:29:56'),
+(5, 3, 1, 1, 35000.00, 35000.00, NULL, 'Lokal', 'Kecil', 'dajal', '2025-05-31 18:41:28', '2025-05-31 18:41:28'),
+(6, 4, 2, 1, 40000.00, 40000.00, NULL, NULL, NULL, NULL, '2025-05-31 18:47:04', '2025-05-31 18:47:04'),
+(7, 5, 5, 1, 20000.00, 20000.00, NULL, NULL, NULL, NULL, '2025-05-31 18:55:21', '2025-05-31 18:55:21'),
+(8, 6, 2, 1, 40000.00, 40000.00, NULL, NULL, NULL, NULL, '2025-05-31 18:56:57', '2025-05-31 18:56:57'),
+(9, 6, 1, 1, 35000.00, 35000.00, NULL, NULL, NULL, 'bebek', '2025-05-31 18:56:57', '2025-05-31 18:56:57'),
+(10, 7, 6, 1, 5000.00, 5000.00, NULL, NULL, NULL, NULL, '2025-05-31 19:51:08', '2025-05-31 19:51:08'),
+(11, 8, 1, 1, 35000.00, 35000.00, NULL, NULL, NULL, NULL, '2025-05-31 19:52:08', '2025-05-31 19:52:08');
 
 -- --------------------------------------------------------
 
@@ -244,6 +280,20 @@ CREATE TABLE `payments` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `payments`
+--
+
+INSERT INTO `payments` (`id`, `order_id`, `payment_method_id`, `amount`, `transaction_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 3, 55000.00, 'TRX-IP9ZY9SS', 'completed', '2025-04-29 00:46:32', '2025-04-29 00:46:32'),
+(2, 2, 3, 75000.00, 'TRX-80Asb2ve', 'completed', '2025-05-31 18:30:09', '2025-05-31 18:30:09'),
+(3, 3, 6, 35000.00, 'TRX-6SYfFa7S', 'completed', '2025-05-31 18:41:32', '2025-05-31 18:41:32'),
+(4, 4, 7, 40000.00, 'QRIS-K4DkevYe', 'completed', '2025-05-31 18:47:26', '2025-05-31 18:47:26'),
+(5, 5, 7, 20000.00, 'QRIS-djrmJxDb', 'completed', '2025-05-31 18:55:25', '2025-05-31 18:55:25'),
+(6, 6, 5, 75000.00, 'TRX-sOzIN1qI', 'completed', '2025-05-31 18:57:01', '2025-05-31 18:57:01'),
+(7, 7, 5, 5000.00, 'TRX-H1vVWDDl', 'completed', '2025-05-31 19:51:17', '2025-05-31 19:51:17'),
+(8, 8, 7, 35000.00, 'QRIS-cqSQFneP', 'completed', '2025-05-31 19:55:43', '2025-05-31 19:55:43');
+
 -- --------------------------------------------------------
 
 --
@@ -270,7 +320,7 @@ INSERT INTO `payment_methods` (`id`, `name`, `description`, `is_active`, `create
 (4, 'OVO', 'Pembayaran menggunakan dompet digital OVO', 1, '2025-04-18 03:52:22', '2025-04-18 03:52:22'),
 (5, 'Dana', 'Pembayaran menggunakan dompet digital Dana', 1, '2025-04-18 03:52:22', '2025-04-18 03:52:22'),
 (6, 'ShopeePay', 'Pembayaran menggunakan dompet digital ShopeePay', 1, '2025-04-18 03:52:22', '2025-04-18 03:52:22'),
-(7, 'QRIS', 'Pembayaran menggunakan QRIS', 0, '2025-04-18 03:52:22', '2025-04-18 03:52:22');
+(7, 'QRIS', 'Pembayaran digital menggunakan QRIS, scan dengan aplikasi e-wallet apa saja', 1, '2025-04-18 03:52:22', '2025-05-31 18:43:50');
 
 -- --------------------------------------------------------
 
@@ -292,7 +342,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('1XloLLiiJyzWY9gzAl4sIphxGdwy9rPmJvv3qUJf', NULL, '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiVWpHdFNPUTNYbnJBN3B3ZEYxTHN2c3ZQVmVDR1dxbW9KeWQyY1RCVSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzM6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9tZW51L2RpbmVpbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1744978336);
+('9QGiXp4mhISTWfziZi3zQyDVR7SJrmrWK4II5fMo', NULL, '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZVlwRXRJbHREVU9zSnh2MHhEbzYzSEFMY3RVU014UWFiWUVGV0ZkRSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1748750582);
 
 -- --------------------------------------------------------
 
@@ -432,7 +482,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `foods`
 --
 ALTER TABLE `foods`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `jobs`
@@ -450,25 +500,25 @@ ALTER TABLE `members`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `order_details`
 --
 ALTER TABLE `order_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `payment_methods`
