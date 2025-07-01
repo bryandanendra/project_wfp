@@ -1,0 +1,29 @@
+# Mengizinkan akses ke folder storage
+<IfModule mod_authz_core.c>
+    Require all granted
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order allow,deny
+    Allow from all
+</IfModule>
+
+# Mengizinkan akses ke semua file
+<FilesMatch ".*">
+    Require all granted
+</FilesMatch>
+
+# Mengatur header untuk gambar
+<IfModule mod_headers.c>
+    <FilesMatch "\.(jpg|jpeg|png|gif)$">
+        Header set Access-Control-Allow-Origin "*"
+        Header set Cache-Control "max-age=2592000, public"
+    </FilesMatch>
+</IfModule>
+
+# Mengizinkan cross-origin resource sharing
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+</IfModule>
+
+# Mengatur opsi untuk mengizinkan symlinks
+Options +FollowSymLinks 

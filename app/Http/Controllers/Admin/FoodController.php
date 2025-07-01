@@ -48,15 +48,35 @@ class FoodController extends Controller
                 // Mengubah nama file sesuai nama menu
                 $imageName = Str::slug($request->name) . '-' . time() . '.' . $request->file('image')->getClientOriginalExtension();
                 
-                // Simpan file ke storage/app/public/foods dengan nama baru
-                $imagePath = $request->file('image')->storeAs('foods', $imageName, 'public');
+                // Pastikan direktori foods ada dengan permission terbuka
+                $foodsPath = storage_path('app/public/foods');
+                if (!file_exists($foodsPath)) {
+                    if (!mkdir($foodsPath, 0777, true)) {
+                        throw new \Exception('Tidak dapat membuat direktori foods. Cek permission folder storage.');
+                    }
+                    // Set permission folder agar terbuka di semua OS
+                    @chmod($foodsPath, 0777);
+                }
                 
-                if (!$imagePath) {
+                // CARA ALTERNATIF: Simpan file langsung menggunakan file_put_contents
+                $uploadedFile = $request->file('image');
+                $imagePath = 'foods/' . $imageName;
+                $fullPath = storage_path('app/public/' . $imagePath);
+                
+                // Baca konten file yang diupload
+                $fileContent = file_get_contents($uploadedFile->getRealPath());
+                
+                // Tulis konten ke lokasi tujuan
+                if (file_put_contents($fullPath, $fileContent) === false) {
                     return redirect()->back()
                         ->withInput()
                         ->withErrors(['image' => 'Gagal menyimpan gambar. Silakan coba lagi.']);
                 }
                 
+                // Set permission file agar dapat diakses di semua OS
+                @chmod($fullPath, 0666);
+                
+                // Pastikan path yang disimpan adalah relatif
                 $data['image'] = $imagePath;
             } catch (\Exception $e) {
                 // Log error untuk debugging
@@ -110,21 +130,46 @@ class FoodController extends Controller
             try {
                 // Delete old image if exists
                 if ($food->image && Storage::disk('public')->exists($food->image)) {
-                    Storage::disk('public')->delete($food->image);
+                    try {
+                        Storage::disk('public')->delete($food->image);
+                    } catch (\Exception $e) {
+                        \Log::warning('Gagal menghapus gambar lama: ' . $e->getMessage());
+                        // Lanjutkan proses meskipun gagal menghapus
+                    }
                 }
 
                 // Mengubah nama file sesuai nama menu
                 $imageName = Str::slug($request->name) . '-' . time() . '.' . $request->file('image')->getClientOriginalExtension();
                 
-                // Simpan file ke storage/app/public/foods dengan nama baru
-                $imagePath = $request->file('image')->storeAs('foods', $imageName, 'public');
+                // Pastikan direktori foods ada dengan permission terbuka
+                $foodsPath = storage_path('app/public/foods');
+                if (!file_exists($foodsPath)) {
+                    if (!mkdir($foodsPath, 0777, true)) {
+                        throw new \Exception('Tidak dapat membuat direktori foods. Cek permission folder storage.');
+                    }
+                    // Set permission folder agar terbuka di semua OS
+                    @chmod($foodsPath, 0777);
+                }
                 
-                if (!$imagePath) {
+                // CARA ALTERNATIF: Simpan file langsung menggunakan file_put_contents
+                $uploadedFile = $request->file('image');
+                $imagePath = 'foods/' . $imageName;
+                $fullPath = storage_path('app/public/' . $imagePath);
+                
+                // Baca konten file yang diupload
+                $fileContent = file_get_contents($uploadedFile->getRealPath());
+                
+                // Tulis konten ke lokasi tujuan
+                if (file_put_contents($fullPath, $fileContent) === false) {
                     return redirect()->back()
                         ->withInput()
                         ->withErrors(['image' => 'Gagal menyimpan gambar. Silakan coba lagi.']);
                 }
                 
+                // Set permission file agar dapat diakses di semua OS
+                @chmod($fullPath, 0666);
+                
+                // Pastikan path yang disimpan adalah relatif
                 $data['image'] = $imagePath;
             } catch (\Exception $e) {
                 // Log error untuk debugging
@@ -151,8 +196,13 @@ class FoodController extends Controller
         }
 
         // Delete image if exists
-        if ($food->image && Storage::exists('public/' . $food->image)) {
-            Storage::delete('public/' . $food->image);
+        if ($food->image && Storage::disk('public')->exists($food->image)) {
+            try {
+                Storage::disk('public')->delete($food->image);
+            } catch (\Exception $e) {
+                \Log::warning('Gagal menghapus gambar: ' . $e->getMessage());
+                // Lanjutkan proses meskipun gagal menghapus
+            }
         }
 
         $food->delete();

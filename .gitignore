@@ -20,3 +20,10 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Tambahan untuk menghindari masalah path absolut
+/public/storage
+/storage/app/public/*
+!/storage/app/public/.gitkeep
+!/storage/app/public/foods/.gitkeep
+!/storage/app/public/categories/.gitkeep

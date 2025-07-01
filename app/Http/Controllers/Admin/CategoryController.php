@@ -36,15 +36,35 @@ class CategoryController extends Controller
                 // Mengubah nama file sesuai nama kategori
                 $imageName = Str::slug($request->name) . '-' . time() . '.' . $request->file('image')->getClientOriginalExtension();
                 
-                // Simpan file ke storage/app/public/categories dengan nama baru
-                $imagePath = $request->file('image')->storeAs('categories', $imageName, 'public');
+                // Pastikan direktori categories ada dengan permission terbuka
+                $categoriesPath = storage_path('app/public/categories');
+                if (!file_exists($categoriesPath)) {
+                    if (!mkdir($categoriesPath, 0777, true)) {
+                        throw new \Exception('Tidak dapat membuat direktori categories. Cek permission folder storage.');
+                    }
+                    // Set permission folder agar terbuka di semua OS
+                    @chmod($categoriesPath, 0777);
+                }
                 
-                if (!$imagePath) {
+                // CARA ALTERNATIF: Simpan file langsung menggunakan file_put_contents
+                $uploadedFile = $request->file('image');
+                $imagePath = 'categories/' . $imageName;
+                $fullPath = storage_path('app/public/' . $imagePath);
+                
+                // Baca konten file yang diupload
+                $fileContent = file_get_contents($uploadedFile->getRealPath());
+                
+                // Tulis konten ke lokasi tujuan
+                if (file_put_contents($fullPath, $fileContent) === false) {
                     return redirect()->back()
                         ->withInput()
                         ->withErrors(['image' => 'Gagal menyimpan gambar. Silakan coba lagi.']);
                 }
                 
+                // Set permission file agar dapat diakses di semua OS
+                @chmod($fullPath, 0666);
+                
+                // Pastikan path yang disimpan adalah relatif
                 $data['image'] = $imagePath;
             } catch (\Exception $e) {
                 // Log error untuk debugging
@@ -86,21 +106,46 @@ class CategoryController extends Controller
             try {
                 // Delete old image if exists
                 if ($category->image && Storage::disk('public')->exists($category->image)) {
-                    Storage::disk('public')->delete($category->image);
+                    try {
+                        Storage::disk('public')->delete($category->image);
+                    } catch (\Exception $e) {
+                        \Log::warning('Gagal menghapus gambar lama: ' . $e->getMessage());
+                        // Lanjutkan proses meskipun gagal menghapus
+                    }
                 }
 
                 // Mengubah nama file sesuai nama kategori
                 $imageName = Str::slug($request->name) . '-' . time() . '.' . $request->file('image')->getClientOriginalExtension();
                 
-                // Simpan file ke storage/app/public/categories dengan nama baru
-                $imagePath = $request->file('image')->storeAs('categories', $imageName, 'public');
+                // Pastikan direktori categories ada dengan permission terbuka
+                $categoriesPath = storage_path('app/public/categories');
+                if (!file_exists($categoriesPath)) {
+                    if (!mkdir($categoriesPath, 0777, true)) {
+                        throw new \Exception('Tidak dapat membuat direktori categories. Cek permission folder storage.');
+                    }
+                    // Set permission folder agar terbuka di semua OS
+                    @chmod($categoriesPath, 0777);
+                }
                 
-                if (!$imagePath) {
+                // CARA ALTERNATIF: Simpan file langsung menggunakan file_put_contents
+                $uploadedFile = $request->file('image');
+                $imagePath = 'categories/' . $imageName;
+                $fullPath = storage_path('app/public/' . $imagePath);
+                
+                // Baca konten file yang diupload
+                $fileContent = file_get_contents($uploadedFile->getRealPath());
+                
+                // Tulis konten ke lokasi tujuan
+                if (file_put_contents($fullPath, $fileContent) === false) {
                     return redirect()->back()
                         ->withInput()
                         ->withErrors(['image' => 'Gagal menyimpan gambar. Silakan coba lagi.']);
                 }
                 
+                // Set permission file agar dapat diakses di semua OS
+                @chmod($fullPath, 0666);
+                
+                // Pastikan path yang disimpan adalah relatif
                 $data['image'] = $imagePath;
             } catch (\Exception $e) {
                 // Log error untuk debugging
@@ -127,8 +172,13 @@ class CategoryController extends Controller
         }
 
         // Delete image if exists
-        if ($category->image && Storage::exists('public/' . $category->image)) {
-            Storage::delete('public/' . $category->image);
+        if ($category->image && Storage::disk('public')->exists($category->image)) {
+            try {
+                Storage::disk('public')->delete($category->image);
+            } catch (\Exception $e) {
+                \Log::warning('Gagal menghapus gambar kategori: ' . $e->getMessage());
+                // Lanjutkan proses meskipun gagal menghapus
+            }
         }
 
         $category->delete();

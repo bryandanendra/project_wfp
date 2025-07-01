@@ -39,7 +39,7 @@ Route::get('/order-status/{order_number}', [OrderStatusController::class, 'show'
 Route::get('/api/order-status/{order_number}', [OrderStatusController::class, 'getStatus'])->name('api.order.status');
 
 // Admin 
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(\App\Http\Middleware\EnsureStoragePermissions::class)->group(function () {
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     
@@ -60,3 +60,53 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('members/reports/most-active', [MemberController::class, 'mostActive'])->name('members.most-active');
     Route::get('members/reports/most-purchases', [MemberController::class, 'mostPurchases'])->name('members.most-purchases');
 });
+
+// Route untuk memperbaiki permission storage (hanya untuk development)
+if (app()->environment('local', 'development')) {
+    Route::get('/fix-storage-permissions', function () {
+        try {
+            \Artisan::call('storage:fix-permissions');
+            return 'Storage permissions fixed successfully! <a href="/">Back to home</a>';
+        } catch (\Exception $e) {
+            return 'Error: ' . $e->getMessage() . '<br>Try running these commands manually:<br>
+                <code>sudo chmod -R 777 ' . storage_path() . '</code><br>
+                <code>php artisan storage:link</code><br>
+                <a href="/">Back to home</a>';
+        }
+    })->name('fix.storage');
+    
+    // Route khusus untuk memperbaiki storage path error
+    Route::get('/fix-storage-path', function () {
+        try {
+            // Pastikan folder storage/app/public ada
+            $publicPath = storage_path('app/public');
+            if (!file_exists($publicPath)) {
+                mkdir($publicPath, 0777, true);
+            }
+            
+            // Pastikan folder storage/app/public/foods ada
+            $foodsPath = storage_path('app/public/foods');
+            if (!file_exists($foodsPath)) {
+                mkdir($foodsPath, 0777, true);
+            }
+            
+            // Pastikan folder storage/app/public/categories ada
+            $categoriesPath = storage_path('app/public/categories');
+            if (!file_exists($categoriesPath)) {
+                mkdir($categoriesPath, 0777, true);
+            }
+            
+            // Pastikan symbolic link ada
+            $publicStoragePath = public_path('storage');
+            if (!file_exists($publicStoragePath)) {
+                \Artisan::call('storage:link');
+            }
+            
+            return 'Storage paths fixed successfully! <a href="/admin/orders">Back to admin orders</a>';
+        } catch (\Exception $e) {
+            return 'Error: ' . $e->getMessage() . '<br>Try running these commands manually:<br>
+                <code>php artisan storage:link</code><br>
+                <a href="/">Back to home</a>';
+        }
+    })->name('fix.storage.path');
+}
