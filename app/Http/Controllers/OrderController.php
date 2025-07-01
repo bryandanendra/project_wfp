@@ -35,6 +35,10 @@ class OrderController extends Controller
             $member = null;
             if ($request->member_email && !empty(trim($request->member_email))) {
                 $member = Member::where('email', $request->member_email)->first();
+            } 
+            // Jika tidak ditemukan berdasarkan email, cari berdasarkan nama
+            else if (!empty(trim($request->member_name))) {
+                $member = Member::where('name', $request->member_name)->first();
             }
             
             // Jika tidak ditemukan, buat member baru

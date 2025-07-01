@@ -56,9 +56,10 @@ Route::prefix('admin')->name('admin.')->middleware(\App\Http\Middleware\EnsureSt
     
     // Members
     Route::get('members', [MemberController::class, 'index'])->name('members.index');
-    Route::get('members/{member}', [MemberController::class, 'show'])->name('members.show');
+    Route::get('members/get/active', [MemberController::class, 'getActive'])->name('members.get-active');
     Route::get('members/reports/most-active', [MemberController::class, 'mostActive'])->name('members.most-active');
     Route::get('members/reports/most-purchases', [MemberController::class, 'mostPurchases'])->name('members.most-purchases');
+    Route::get('members/{member}', [MemberController::class, 'show'])->name('members.show');
 });
 
 // Route untuk memperbaiki permission storage (hanya untuk development)

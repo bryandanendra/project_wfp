@@ -41,4 +41,41 @@ class MemberController extends Controller
         
         return view('admin.members.most_purchases', compact('members'));
     }
+
+    public function getActive()
+    {
+        // Mengambil semua member
+        $members = Member::all();
+        
+        // Mengelompokkan member berdasarkan nama dan menggabungkan jumlah pesanan
+        $groupedMembers = [];
+        foreach ($members as $member) {
+            $name = $member->name;
+            
+            // Hitung jumlah pesanan untuk member ini
+            $ordersCount = $member->orders()->count();
+            
+            // Jika nama sudah ada di array, tambahkan jumlah pesanan
+            if (isset($groupedMembers[$name])) {
+                $groupedMembers[$name]['orders_count'] += $ordersCount;
+            } else {
+                // Jika nama belum ada, tambahkan member baru
+                $groupedMembers[$name] = [
+                    'id' => $member->id,
+                    'name' => $name,
+                    'email' => $member->email,
+                    'phone' => $member->phone,
+                    'orders_count' => $ordersCount
+                ];
+            }
+        }
+        
+        // Konversi ke array dan urutkan berdasarkan orders_count
+        $result = array_values($groupedMembers);
+        usort($result, function($a, $b) {
+            return $b['orders_count'] - $a['orders_count'];
+        });
+        
+        return response()->json($result);
+    }
 }

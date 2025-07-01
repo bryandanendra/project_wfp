@@ -68,46 +68,26 @@
 
 <div class="row">
     <div class="col-md-6">
-        <!-- Member Highlight Cards -->
-        <div class="row">
-            <!-- Member Teraktif -->
-            <div class="col-md-6">
-                <div class="card card-primary">
-                    <div class="card-header">
-                        <h3 class="card-title">Member Teraktif</h3>
-                    </div>
-                    <div class="card-body">
-                        @if($mostTransactionsMember)
-                        <div class="text-center mb-2">
-                            <img src="https://ui-avatars.com/api/?name={{ urlencode($mostTransactionsMember->name) }}&background=random" class="img-circle elevation-2" alt="Member" style="width: 60px; height: 60px;">
-                        </div>
-                        <h5 class="text-center">{{ $mostTransactionsMember->name }}</h5>
-                        <p class="text-center text-muted mb-0">{{ $mostTransactionsMember->orders_count }} Transaksi</p>
-                        @else
-                        <p class="text-center">Tidak ada data member</p>
-                        @endif
-                    </div>
+        <!-- Top Spender -->
+        <div class="card card-success">
+            <div class="card-header">
+                <h3 class="card-title">Top Spender</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
                 </div>
             </div>
-            
-            <!-- Member Pembelian Terbanyak -->
-            <div class="col-md-6">
-                <div class="card card-success">
-                    <div class="card-header">
-                        <h3 class="card-title">Top Spender</h3>
-                    </div>
-                    <div class="card-body">
-                        @if($topBuyingMember)
-                        <div class="text-center mb-2">
-                            <img src="https://ui-avatars.com/api/?name={{ urlencode($topBuyingMember->name) }}&background=random" class="img-circle elevation-2" alt="Member" style="width: 60px; height: 60px;">
-                        </div>
-                        <h5 class="text-center">{{ $topBuyingMember->name }}</h5>
-                        <p class="text-center text-muted mb-0">Rp {{ number_format($topBuyingMember->total_spent, 0, ',', '.') }}</p>
-                        @else
-                        <p class="text-center">Tidak ada data pembelian</p>
-                        @endif
-                    </div>
+            <div class="card-body">
+                @if($topBuyingMember)
+                <div class="text-center mb-2">
+                    <img src="https://ui-avatars.com/api/?name={{ urlencode($topBuyingMember->name) }}&background=random" class="img-circle elevation-2" alt="Member" style="width: 60px; height: 60px;">
                 </div>
+                <h5 class="text-center">{{ $topBuyingMember->name }}</h5>
+                <p class="text-center text-muted mb-0">Rp {{ number_format($topBuyingMember->total_spent, 0, ',', '.') }}</p>
+                @else
+                <p class="text-center">Tidak ada data pembelian</p>
+                @endif
             </div>
         </div>
 
@@ -192,7 +172,58 @@
                         </ul>
                     </div>
                     <div class="card-footer text-center">
-                        <a href="{{ route('admin.members.most-active') }}" class="btn btn-sm btn-primary">Lihat Semua Member</a>
+                        <button id="showAllMembersBtn" class="btn btn-sm btn-primary">Lihat Semua Member</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistik Pesanan -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Statistik Pesanan</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
+                            <p class="text-success text-sm">
+                                <i class="fas fa-check"></i>
+                            </p>
+                            <p class="d-flex flex-column text-right">
+                                <span class="font-weight-bold">
+                                    {{ $completedOrdersCount }}
+                                </span>
+                                <span class="text-muted">Pesanan Selesai</span>
+                            </p>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
+                            <p class="text-primary text-sm">
+                                <i class="fas fa-sync-alt"></i>
+                            </p>
+                            <p class="d-flex flex-column text-right">
+                                <span class="font-weight-bold">
+                                    {{ $processingOrdersCount }}
+                                </span>
+                                <span class="text-muted">Pesanan Diproses</span>
+                            </p>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <p class="text-warning text-sm">
+                                <i class="fas fa-clock"></i>
+                            </p>
+                            <p class="d-flex flex-column text-right">
+                                <span class="font-weight-bold">
+                                    {{ $pendingOrdersCount }}
+                                </span>
+                                <span class="text-muted">Pesanan Pending</span>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -321,10 +352,92 @@
 </div>
 @endsection
 
+<!-- Modal untuk menampilkan semua member -->
+<div class="modal fade" id="allMembersModal" tabindex="-1" role="dialog" aria-labelledby="allMembersModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="allMembersModalLabel">Semua Member Aktif</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row" id="allMembersContainer">
+                    <!-- Data member akan dimuat di sini -->
+                    <div class="col-12 text-center">
+                        <i class="fas fa-spinner fa-spin fa-2x"></i>
+                        <p>Memuat data member...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModalBtn">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Button untuk menampilkan semua member - hanya satu event listener
+        document.getElementById('showAllMembersBtn').addEventListener('click', function() {
+            // Modal akan dikelola oleh Bootstrap
+            loadAllMembers();
+        });
+
+        // Fungsi untuk memuat semua member
+        function loadAllMembers() {
+            fetch('{{ route('admin.members.get-active') }}')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('allMembersContainer');
+                    container.innerHTML = ''; // Bersihkan kontainer
+                    
+                    if (data.length === 0) {
+                        container.innerHTML = '<div class="col-12 text-center"><p>Tidak ada data member aktif.</p></div>';
+                        return;
+                    }
+                    
+                    data.forEach(member => {
+                        const memberEl = document.createElement('div');
+                        memberEl.className = 'col-md-3 col-sm-6 col-12 mb-3';
+                        
+                        const imgUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`;
+                        const memberUrl = '{{ route("admin.members.show", ":id") }}'.replace(':id', member.id);
+                        
+                        memberEl.innerHTML = `
+                            <div class="info-box">
+                                <span class="info-box-icon bg-info">
+                                    <img src="${imgUrl}" alt="${member.name}" class="img-fluid rounded-circle">
+                                </span>
+                                <div class="info-box-content">
+                                    <a href="${memberUrl}" class="info-box-text">${member.name}</a>
+                                    <span class="info-box-number">${member.orders_count} pesanan</span>
+                                </div>
+                            </div>
+                        `;
+                        container.appendChild(memberEl);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    const container = document.getElementById('allMembersContainer');
+                    container.innerHTML = '<div class="col-12 text-center"><p>Gagal memuat data member. Silakan coba lagi.</p></div>';
+                });
+        }
+        
+        // Inisialisasi Bootstrap modal
+        $(function() {
+            // Event handler untuk tombol yang membuka modal
+            $('#showAllMembersBtn').on('click', function() {
+                var myModal = new bootstrap.Modal(document.getElementById('allMembersModal'));
+                myModal.show();
+            });
+        });
+
         // Order Status Chart
         var orderStatusCtx = document.getElementById('orderStatusChart').getContext('2d');
         var orderStatusData = {

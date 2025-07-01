@@ -30,7 +30,7 @@ class DashboardController extends Controller
         // Pesanan terbaru
         $recentOrders = Order::with('member')
             ->orderBy('created_at', 'desc')
-            ->take(10)
+            ->take(9)
             ->get();
 
         // Member teraktif
@@ -39,6 +39,49 @@ class DashboardController extends Controller
             ->take(4)
             ->get();
 
+        // Member teraktif - menggabungkan berdasarkan nama
+        $allMembers = Member::all();
+        $groupedMembers = [];
+        
+        foreach ($allMembers as $member) {
+            $name = $member->name;
+            // Hitung jumlah pesanan untuk member ini
+            $ordersCount = $member->orders()->count();
+            
+            if (isset($groupedMembers[$name])) {
+                $groupedMembers[$name]['orders_count'] += $ordersCount;
+            } else {
+                $groupedMembers[$name] = [
+                    'id' => $member->id,
+                    'name' => $name,
+                    'email' => $member->email,
+                    'phone' => $member->phone,
+                    'orders_count' => $ordersCount,
+                    'model' => $member
+                ];
+            }
+        }
+        
+        // Urutkan berdasarkan jumlah pesanan terbanyak
+        uasort($groupedMembers, function($a, $b) {
+            return $b['orders_count'] - $a['orders_count'];
+        });
+        
+        // Ambil 4 member teraktif
+        $activeMembers = collect(array_slice($groupedMembers, 0, 4))->map(function($item) {
+            $member = $item['model'];
+            $member->orders_count = $item['orders_count'];
+            return $member;
+        });
+        
+        // Member dengan transaksi terbanyak untuk card utama
+        $mostTransactionsMember = null;
+        if (!empty($groupedMembers)) {
+            $firstMember = reset($groupedMembers);
+            $mostTransactionsMember = $firstMember['model'];
+            $mostTransactionsMember->orders_count = $firstMember['orders_count'];
+        }
+
         // Member dengan total pembelian terbanyak
         $topBuyingMember = DB::table('members')
             ->select('members.id', 'members.name', 'members.email', DB::raw('SUM(orders.total_amount) as total_spent'))
@@ -46,11 +89,6 @@ class DashboardController extends Controller
             ->where('orders.status', 'completed')
             ->groupBy('members.id', 'members.name', 'members.email')
             ->orderBy('total_spent', 'desc')
-            ->first();
-            
-        // Member dengan transaksi terbanyak
-        $mostTransactionsMember = Member::withCount('orders')
-            ->orderBy('orders_count', 'desc')
             ->first();
             
         // Total omzet
@@ -65,7 +103,7 @@ class DashboardController extends Controller
             ->leftJoin('order_details', 'foods.id', '=', 'order_details.food_id')
             ->groupBy('foods.id', 'foods.name', 'foods.description', 'foods.price', 'foods.image')
             ->orderBy('order_count', 'desc')
-            ->take(5)
+            ->take(3)
             ->get();
             
         // Produk yang perlu diendorse (produk dengan penjualan rendah tetapi potensial)
