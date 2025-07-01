@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Food;
+use App\Models\Member;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\PaymentMethod;
@@ -19,10 +20,35 @@ class OrderController extends Controller
             'items.*.food_id' => 'required|exists:foods,id',
             'items.*.quantity' => 'required|integer|min:1',
             'table_number' => 'required_if:order_type,dine_in',
+            'member_name' => 'required|string|max:255',
+            'member_email' => 'nullable|email|max:255',
+            'member_phone' => 'nullable|string|max:20',
         ]);
 
         // Generate unique order number
         $orderNumber = 'ORD-' . Str::random(8);
+
+        // Create or find member
+        $memberId = null;
+        if ($request->member_name) {
+            // Cari member berdasarkan email jika ada dan tidak kosong
+            $member = null;
+            if ($request->member_email && !empty(trim($request->member_email))) {
+                $member = Member::where('email', $request->member_email)->first();
+            }
+            
+            // Jika tidak ditemukan, buat member baru
+            if (!$member) {
+                $member = Member::create([
+                    'name' => $request->member_name,
+                    'email' => $request->member_email ? trim($request->member_email) : null,
+                    'phone' => $request->member_phone ? trim($request->member_phone) : null,
+                    // Password tidak perlu diisi karena sudah nullable
+                ]);
+            }
+            
+            $memberId = $member->id;
+        }
 
         // Calculate total amount
         $totalAmount = 0;
@@ -34,6 +60,7 @@ class OrderController extends Controller
 
         // Create order
         $order = Order::create([
+            'member_id' => $memberId,
             'order_number' => $orderNumber,
             'order_type' => $request->order_type,
             'table_number' => $request->table_number,
@@ -64,7 +91,7 @@ class OrderController extends Controller
 
     public function payment($orderId)
     {
-        $order = Order::with('orderDetails.food')->findOrFail($orderId);
+        $order = Order::with(['orderDetails.food', 'member'])->findOrFail($orderId);
         $paymentMethods = PaymentMethod::where('is_active', true)->get();
 
         return view('payment.index', [
@@ -79,7 +106,7 @@ class OrderController extends Controller
             'payment_method_id' => 'required|exists:payment_methods,id',
         ]);
 
-        $order = Order::findOrFail($orderId);
+        $order = Order::with('member')->findOrFail($orderId);
         $paymentMethod = PaymentMethod::findOrFail($request->payment_method_id);
         
         // Generate transaction ID

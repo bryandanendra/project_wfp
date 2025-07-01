@@ -24,6 +24,18 @@
                             @if($order->notes)
                                 <p><strong>Catatan:</strong> {{ $order->notes }}</p>
                             @endif
+                            @if($order->member)
+                                <div class="mt-3 pt-2 border-top">
+                                    <h5><i class="fas fa-user-circle me-2 text-primary"></i>Informasi Member</h5>
+                                    <p class="mb-1"><strong>Nama:</strong> {{ $order->member->name }}</p>
+                                    @if($order->member->email)
+                                        <p class="mb-1"><strong>Email:</strong> {{ $order->member->email }}</p>
+                                    @endif
+                                    @if($order->member->phone)
+                                        <p class="mb-1"><strong>Telepon:</strong> {{ $order->member->phone }}</p>
+                                    @endif
+                                </div>
+                            @endif
                         </div>
                         <div class="col-md-6 text-md-end">
                             <h5>Total Pembayaran</h5>

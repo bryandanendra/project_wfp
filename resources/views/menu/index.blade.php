@@ -196,6 +196,44 @@
             </div>
         </div>
     </div>
+    
+    <!-- Member Registration Modal -->
+    <div class="modal fade" id="memberModal" tabindex="-1" aria-labelledby="memberModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="memberModalLabel"><i class="fas fa-user-plus me-2"></i>Informasi Member</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-user-circle fa-5x text-success mb-3"></i>
+                        <h4>Silakan isi data diri Anda</h4>
+                        <p class="text-muted">Data ini akan disimpan untuk transaksi selanjutnya</p>
+                    </div>
+                    
+                    <form id="memberForm">
+                        <div class="form-group mb-3">
+                            <label for="memberName" class="form-label"><i class="fas fa-user me-2"></i>Nama Lengkap</label>
+                            <input type="text" id="memberName" name="name" class="form-control" required placeholder="Masukkan nama lengkap Anda">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="memberEmail" class="form-label"><i class="fas fa-envelope me-2"></i>Email (opsional)</label>
+                            <input type="email" id="memberEmail" name="email" class="form-control" placeholder="Masukkan alamat email Anda">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="memberPhone" class="form-label"><i class="fas fa-phone me-2"></i>Nomor Telepon (opsional)</label>
+                            <input type="tel" id="memberPhone" name="phone" class="form-control" placeholder="Masukkan nomor telepon Anda">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Batal</button>
+                    <button type="button" class="btn btn-success" id="saveMemberBtn"><i class="fas fa-save me-2"></i>Simpan & Lanjutkan</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @endsection
@@ -354,149 +392,98 @@
 
 @push('scripts')
 <script>
+    let cart = [];
+    
     document.addEventListener('DOMContentLoaded', function() {
-        // Init all food items with proper visibility
-        const foodItems = document.querySelectorAll('.food-item');
-        foodItems.forEach(item => {
-            item.style.opacity = '1';
-            item.style.transform = 'translateY(0)';
-            item.style.display = 'block';
-        });
-        
-        // Cart functionality
-        let cart = [];
-        updateCartDisplay();
-
-        // Category filtering with smooth animation
+        // Filter by category
         const categoryButtons = document.querySelectorAll('.category-filter');
+        
         categoryButtons.forEach(button => {
             button.addEventListener('click', function() {
-                const category = this.getAttribute('data-category');
+                const categoryId = this.getAttribute('data-category');
                 
-                // Update active button
+                // Update active state
                 categoryButtons.forEach(btn => btn.classList.remove('active'));
                 this.classList.add('active');
                 
-                // Improved filtering logic to avoid sudden disappearing/appearing
+                // Filter food items
                 const foodItems = document.querySelectorAll('.food-item');
-                
-                // Step 1: Fade out items that need to be hidden, but keep them visible in DOM
                 foodItems.forEach(item => {
-                    const shouldShow = category === 'all' || item.getAttribute('data-category') === category;
-                    
-                    // For items that should be hidden but are currently visible
-                    if (!shouldShow && item.style.display !== 'none') {
-                        item.style.opacity = '0';
-                        item.style.transform = 'translateY(20px)';
-                    }
-                    
-                    // For items that should be shown but are currently hidden, make sure they're in the DOM
-                    if (shouldShow && item.style.display === 'none') {
+                    if (categoryId === 'all' || item.getAttribute('data-category') === categoryId) {
                         item.style.display = 'block';
-                        item.style.opacity = '0';
-                        item.style.transform = 'translateY(20px)';
+                    } else {
+                        item.style.display = 'none';
                     }
                 });
-                
-                // Step 2: After short delay, fade in items that should be visible
-                setTimeout(() => {
-                    foodItems.forEach(item => {
-                        const shouldShow = category === 'all' || item.getAttribute('data-category') === category;
-                        
-                        if (shouldShow) {
-                            item.style.display = 'block';
-                            // Use a small delay to create a staggered effect
-                            setTimeout(() => {
-                                item.style.opacity = '1';
-                                item.style.transform = 'translateY(0)';
-                            }, 50);
-                        }
-                    });
-                }, 300);
-                
-                // Step 3: After transition completes, actually hide elements that should be hidden
-                setTimeout(() => {
-                    foodItems.forEach(item => {
-                        const shouldShow = category === 'all' || item.getAttribute('data-category') === category;
-                        if (!shouldShow) {
-                            item.style.display = 'none';
-                        }
-                    });
-                }, 600);
             });
         });
-
-        // Add to cart from menu
-        document.querySelectorAll('.add-to-cart').forEach(button => {
+        
+        // Add to cart functionality
+        const addButtons = document.querySelectorAll('.add-to-cart');
+        addButtons.forEach(button => {
             button.addEventListener('click', function() {
-                const id = this.getAttribute('data-id');
+                const id = parseInt(this.getAttribute('data-id'));
                 const name = this.getAttribute('data-name');
                 const price = parseFloat(this.getAttribute('data-price'));
-                
                 addToCart(id, name, price);
             });
         });
-
+        
         // View food details
-        document.querySelectorAll('.view-details').forEach(button => {
+        const viewButtons = document.querySelectorAll('.view-details');
+        viewButtons.forEach(button => {
             button.addEventListener('click', function() {
-                const id = this.getAttribute('data-id');
+                const modal = document.getElementById('foodDetailModal');
                 const name = this.getAttribute('data-name');
                 const description = this.getAttribute('data-description');
                 const nutrition = this.getAttribute('data-nutrition');
                 const price = parseFloat(this.getAttribute('data-price'));
                 const image = this.getAttribute('data-image');
+                const id = parseInt(this.getAttribute('data-id'));
                 
                 document.getElementById('modalFoodName').textContent = name;
                 document.getElementById('modalDescription').textContent = description;
-                document.getElementById('modalNutrition').textContent = nutrition;
-                document.getElementById('modalPrice').textContent = `Rp ${formatNumber(price)}`;
+                document.getElementById('modalNutrition').textContent = nutrition || 'Informasi nutrisi belum tersedia';
+                document.getElementById('modalPrice').textContent = 'Rp ' + formatNumber(price);
                 
-                const modalImage = document.getElementById('modalImage');
+                const imageContainer = document.getElementById('modalImage');
                 if (image) {
-                    modalImage.innerHTML = `<img src="${image}" class="img-fluid rounded shadow" style="max-height: 300px; object-fit: contain;">`;
+                    imageContainer.innerHTML = `<img src="${image}" class="img-fluid rounded" alt="${name}">`;
                 } else {
-                    modalImage.innerHTML = `<div class="bg-light text-center py-5 rounded">
-                                            <i class="fas fa-utensils fa-4x text-muted"></i>
-                                        </div>`;
+                    imageContainer.innerHTML = `<div class="bg-light text-center py-5" style="height: 200px;">
+                        <i class="fas fa-utensils fa-4x text-muted"></i>
+                    </div>`;
                 }
                 
-                // Set data for add to cart button in modal
-                const addToCartBtn = document.querySelector('.add-to-cart-modal');
-                addToCartBtn.setAttribute('data-id', id);
-                addToCartBtn.setAttribute('data-name', name);
-                addToCartBtn.setAttribute('data-price', price);
+                // Update add to cart button in modal
+                const addToCartModalBtn = document.querySelector('.add-to-cart-modal');
+                addToCartModalBtn.setAttribute('data-id', id);
+                addToCartModalBtn.setAttribute('data-name', name);
+                addToCartModalBtn.setAttribute('data-price', price);
                 
-                const modal = new bootstrap.Modal(document.getElementById('foodDetailModal'));
-                modal.show();
+                // Show modal
+                const bsModal = new bootstrap.Modal(modal);
+                bsModal.show();
             });
         });
         
         // Add to cart from modal
-        document.querySelector('.add-to-cart-modal').addEventListener('click', function() {
-            const id = this.getAttribute('data-id');
+        const modalAddButton = document.querySelector('.add-to-cart-modal');
+        modalAddButton.addEventListener('click', function() {
+            const id = parseInt(this.getAttribute('data-id'));
             const name = this.getAttribute('data-name');
             const price = parseFloat(this.getAttribute('data-price'));
-            
             addToCart(id, name, price);
-            bootstrap.Modal.getInstance(document.getElementById('foodDetailModal')).hide();
+            
+            // Hide the modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('foodDetailModal'));
+            if (modal) {
+                modal.hide();
+            }
         });
         
         // View cart
-        document.getElementById('viewCart').addEventListener('click', function(event) {
-            // Prevent default behavior if needed
-            event.preventDefault();
-            
-            // Ensure any existing toasts are removed to prevent blocking interaction
-            const existingToasts = document.querySelectorAll('.toast-container, [class*="toast"]');
-            existingToasts.forEach(toast => {
-                if (toast && toast.parentNode) {
-                    toast.parentNode.removeChild(toast);
-                }
-            });
-            
-            updateCartDisplay();
-            
+        document.getElementById('viewCart').addEventListener('click', function() {
             // Make sure modal exists and is properly initialized
             const cartModalElement = document.getElementById('cartModal');
             if (!cartModalElement) {
@@ -516,6 +503,22 @@
         document.getElementById('checkoutBtn').addEventListener('click', function() {
             if (cart.length === 0) return;
             
+            // Show member registration modal instead of direct checkout
+            const memberModal = new bootstrap.Modal(document.getElementById('memberModal'));
+            memberModal.show();
+        });
+        
+        // Save member and proceed to checkout
+        document.getElementById('saveMemberBtn').addEventListener('click', function() {
+            const memberName = document.getElementById('memberName').value;
+            const memberEmail = document.getElementById('memberEmail').value;
+            const memberPhone = document.getElementById('memberPhone').value;
+            
+            if (!memberName) {
+                alert('Silakan masukkan nama Anda.');
+                return;
+            }
+            
             const orderType = '{{ $orderType }}';
             let tableNumber = null;
             
@@ -531,6 +534,9 @@
                 order_type: orderType === 'dinein' ? 'dine_in' : 'take_away',
                 table_number: tableNumber,
                 notes: document.getElementById('orderNotes').value,
+                member_name: memberName,
+                member_email: memberEmail,
+                member_phone: memberPhone,
                 items: cart.map(item => ({
                     food_id: item.id,
                     quantity: item.quantity,

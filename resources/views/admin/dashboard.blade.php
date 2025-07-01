@@ -44,7 +44,20 @@
     </div>
     <div class="col-12 col-sm-6 col-md-3">
         <div class="info-box mb-3">
-            <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-tag"></i></span>
+            <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-money-bill-wave"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Total Omzet</span>
+                <span class="info-box-number">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Kategori dan Transaksi -->
+<div class="row">
+    <div class="col-md-3">
+        <div class="info-box mb-3">
+            <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-tag"></i></span>
             <div class="info-box-content">
                 <span class="info-box-text">Total Kategori</span>
                 <span class="info-box-number">{{ $totalCategories }}</span>
@@ -54,7 +67,50 @@
 </div>
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-6">
+        <!-- Member Highlight Cards -->
+        <div class="row">
+            <!-- Member Teraktif -->
+            <div class="col-md-6">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Member Teraktif</h3>
+                    </div>
+                    <div class="card-body">
+                        @if($mostTransactionsMember)
+                        <div class="text-center mb-2">
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode($mostTransactionsMember->name) }}&background=random" class="img-circle elevation-2" alt="Member" style="width: 60px; height: 60px;">
+                        </div>
+                        <h5 class="text-center">{{ $mostTransactionsMember->name }}</h5>
+                        <p class="text-center text-muted mb-0">{{ $mostTransactionsMember->orders_count }} Transaksi</p>
+                        @else
+                        <p class="text-center">Tidak ada data member</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Member Pembelian Terbanyak -->
+            <div class="col-md-6">
+                <div class="card card-success">
+                    <div class="card-header">
+                        <h3 class="card-title">Top Spender</h3>
+                    </div>
+                    <div class="card-body">
+                        @if($topBuyingMember)
+                        <div class="text-center mb-2">
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode($topBuyingMember->name) }}&background=random" class="img-circle elevation-2" alt="Member" style="width: 60px; height: 60px;">
+                        </div>
+                        <h5 class="text-center">{{ $topBuyingMember->name }}</h5>
+                        <p class="text-center text-muted mb-0">Rp {{ number_format($topBuyingMember->total_spent, 0, ',', '.') }}</p>
+                        @else
+                        <p class="text-center">Tidak ada data pembelian</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Pesanan Terbaru -->
         <div class="card">
             <div class="card-header border-transparent">
@@ -111,69 +167,118 @@
         </div>
     </div>
 
-    <div class="col-md-4">
-        <!-- Member Teraktif -->
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Member Teraktif</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
+    <div class="col-md-6">
+        <div class="row">
+            <!-- Member Teraktif -->
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Member Teraktif</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="users-list clearfix">
+                            @foreach($activeMembers as $member)
+                            <li>
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode($member->name) }}&background=random" alt="{{ $member->name }}" class="img-fluid">
+                                <a class="users-list-name" href="{{ route('admin.members.show', $member->id) }}">{{ $member->name }}</a>
+                                <span class="users-list-date">{{ $member->orders_count }} pesanan</span>
+                            </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="{{ route('admin.members.most-active') }}" class="btn btn-sm btn-primary">Lihat Semua Member</a>
+                    </div>
                 </div>
-            </div>
-            <div class="card-body p-0">
-                <ul class="users-list clearfix">
-                    @foreach($activeMembers as $member)
-                    <li>
-                        <img src="https://ui-avatars.com/api/?name={{ urlencode($member->name) }}&background=random" alt="{{ $member->name }}" class="img-fluid">
-                        <a class="users-list-name" href="{{ route('admin.members.show', $member->id) }}">{{ $member->name }}</a>
-                        <span class="users-list-date">{{ $member->orders_count }} pesanan</span>
-                    </li>
-                    @endforeach
-                </ul>
-            </div>
-            <div class="card-footer text-center">
-                <a href="{{ route('admin.members.most-active') }}" class="btn btn-sm btn-primary">Lihat Semua Member</a>
             </div>
         </div>
 
-        <!-- Makanan Terpopuler -->
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Makanan Terpopuler</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Makanan Terpopuler -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Makanan Terlaris</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="products-list product-list-in-card pl-2 pr-2">
+                            @foreach($popularFoods as $food)
+                            <li class="item">
+                                <div class="product-img">
+                                    @if(isset($food->image) && $food->image)
+                                        <img src="{{ asset('storage/' . $food->image) }}" alt="{{ $food->name }}" class="img-size-50">
+                                    @else
+                                        <img src="https://via.placeholder.com/150" alt="{{ $food->name }}" class="img-size-50">
+                                    @endif
+                                </div>
+                                <div class="product-info">
+                                    <a href="{{ route('admin.foods.show', $food->id) }}" class="product-title">
+                                        {{ $food->name }}
+                                        <span class="badge bg-success float-end">Rp {{ number_format($food->price, 0, ',', '.') }}</span>
+                                    </a>
+                                    <span class="product-description">
+                                        {{ \Illuminate\Support\Str::limit($food->description, 50) }}
+                                    </span>
+                                </div>
+                            </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="{{ route('admin.foods.index') }}" class="btn btn-sm btn-primary">Lihat Semua Makanan</a>
+                    </div>
                 </div>
             </div>
-            <div class="card-body p-0">
-                <ul class="products-list product-list-in-card pl-2 pr-2">
-                    @foreach($popularFoods as $food)
-                    <li class="item">
-                        <div class="product-img">
-                            @if(isset($food->image) && $food->image)
-                                <img src="{{ asset('storage/' . $food->image) }}" alt="{{ $food->name }}" class="img-size-50">
-                            @else
-                                <img src="https://via.placeholder.com/150" alt="{{ $food->name }}" class="img-size-50">
-                            @endif
+
+            <div class="col-md-6">
+                <!-- Produk Perlu Diendorse -->
+                <div class="card">
+                    <div class="card-header bg-warning">
+                        <h3 class="card-title">Perlu Diendorse</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
                         </div>
-                        <div class="product-info">
-                            <a href="{{ route('admin.foods.show', $food->id) }}" class="product-title">
-                                {{ $food->name }}
-                                <span class="badge bg-success float-end">Rp {{ number_format($food->price, 0, ',', '.') }}</span>
-                            </a>
-                            <span class="product-description">
-                                {{ \Illuminate\Support\Str::limit($food->description, 50) }}
-                            </span>
-                        </div>
-                    </li>
-                    @endforeach
-                </ul>
-            </div>
-            <div class="card-footer text-center">
-                <a href="{{ route('admin.foods.index') }}" class="btn btn-sm btn-primary">Lihat Semua Makanan</a>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="products-list product-list-in-card pl-2 pr-2">
+                            @foreach($productsToEndorse as $food)
+                            <li class="item">
+                                <div class="product-img">
+                                    @if(isset($food->image) && $food->image)
+                                        <img src="{{ asset('storage/' . $food->image) }}" alt="{{ $food->name }}" class="img-size-50">
+                                    @else
+                                        <img src="https://via.placeholder.com/150" alt="{{ $food->name }}" class="img-size-50">
+                                    @endif
+                                </div>
+                                <div class="product-info">
+                                    <a href="{{ route('admin.foods.show', $food->id) }}" class="product-title">
+                                        {{ $food->name }}
+                                        <span class="badge bg-warning float-end">{{ $food->order_count }} terjual</span>
+                                    </a>
+                                    <span class="product-description">
+                                        {{ \Illuminate\Support\Str::limit($food->description, 50) }}
+                                    </span>
+                                </div>
+                            </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="{{ route('admin.foods.index') }}?sort=low_sales" class="btn btn-sm btn-warning">Lihat Semua</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

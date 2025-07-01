@@ -21,6 +21,19 @@
                             <p><strong>Total Pembayaran:</strong> Rp {{ number_format($order->total_amount, 0, ',', '.') }}</p>
                             <p><strong>Status:</strong> <span class="badge bg-warning">{{ ucfirst($order->status) }}</span></p>
                             <p><strong>Tanggal:</strong> {{ $order->created_at->format('d M Y, H:i') }}</p>
+                            
+                            @if($order->member)
+                            <div class="mt-3 pt-2 border-top text-start">
+                                <h6 class="mb-2"><i class="fas fa-user-circle me-2 text-primary"></i>Informasi Member</h6>
+                                <p class="mb-1"><strong>Nama:</strong> {{ $order->member->name }}</p>
+                                @if($order->member->email)
+                                    <p class="mb-1"><strong>Email:</strong> {{ $order->member->email }}</p>
+                                @endif
+                                @if($order->member->phone)
+                                    <p class="mb-1"><strong>Telepon:</strong> {{ $order->member->phone }}</p>
+                                @endif
+                            </div>
+                            @endif
                         </div>
                     </div>
                     

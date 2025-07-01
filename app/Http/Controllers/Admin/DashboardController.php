@@ -39,6 +39,25 @@ class DashboardController extends Controller
             ->take(4)
             ->get();
 
+        // Member dengan total pembelian terbanyak
+        $topBuyingMember = DB::table('members')
+            ->select('members.id', 'members.name', 'members.email', DB::raw('SUM(orders.total_amount) as total_spent'))
+            ->join('orders', 'members.id', '=', 'orders.member_id')
+            ->where('orders.status', 'completed')
+            ->groupBy('members.id', 'members.name', 'members.email')
+            ->orderBy('total_spent', 'desc')
+            ->first();
+            
+        // Member dengan transaksi terbanyak
+        $mostTransactionsMember = Member::withCount('orders')
+            ->orderBy('orders_count', 'desc')
+            ->first();
+            
+        // Total omzet
+        $totalRevenue = DB::table('orders')
+            ->where('status', 'completed')
+            ->sum('total_amount');
+            
         // Makanan terpopuler - perbaikan query GROUP BY
         $popularFoods = DB::table('foods')
             ->select('foods.id', 'foods.name', 'foods.description', 'foods.price', 'foods.image', 
@@ -47,6 +66,17 @@ class DashboardController extends Controller
             ->groupBy('foods.id', 'foods.name', 'foods.description', 'foods.price', 'foods.image')
             ->orderBy('order_count', 'desc')
             ->take(5)
+            ->get();
+            
+        // Produk yang perlu diendorse (produk dengan penjualan rendah tetapi potensial)
+        $productsToEndorse = DB::table('foods')
+            ->select('foods.id', 'foods.name', 'foods.description', 'foods.price', 'foods.image', 
+                    DB::raw('COUNT(order_details.id) as order_count'))
+            ->leftJoin('order_details', 'foods.id', '=', 'order_details.food_id')
+            ->groupBy('foods.id', 'foods.name', 'foods.description', 'foods.price', 'foods.image')
+            ->havingRaw('COUNT(order_details.id) > 0')
+            ->orderBy('order_count', 'asc')
+            ->take(3)
             ->get();
 
         // Data untuk grafik kategori - perbaikan query GROUP BY
@@ -69,7 +99,11 @@ class DashboardController extends Controller
             'recentOrders',
             'activeMembers',
             'popularFoods',
-            'categoriesForChart'
+            'categoriesForChart',
+            'topBuyingMember',
+            'mostTransactionsMember',
+            'totalRevenue',
+            'productsToEndorse'
         ));
     }
 } 
